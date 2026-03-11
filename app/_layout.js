@@ -13,6 +13,13 @@ export default function Layout() {
           }}
         />
         <Drawer.Screen
+          name="homeQuiz"
+          options={{
+            drawerLabel: 'Quiz',
+            title: 'QuizHome',
+          }}
+        />
+        <Drawer.Screen
           name="auth/login"
           options={{
             drawerLabel: 'Iniciar Sesión',
