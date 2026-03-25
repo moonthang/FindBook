@@ -1,12 +1,40 @@
 import { Ionicons } from '@expo/vector-icons';
-import { Link } from 'expo-router';
+import { Link, useRouter } from 'expo-router';
 import React, { useState } from 'react';
-import { Image, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Alert, Image, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { styles } from '../../constants/styleAuth';
+import { loginUser } from '../../service/authService';
 
 export default function Login() {
+    const router = useRouter();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [loading, setLoading] = useState(false);
+
+    const handleLogin = async () => {
+        if (!email || !password) {
+            Alert.alert('Error', 'Por favor, ingrese correo y contraseña.');
+            return;
+        }
+
+        setLoading(true);
+        try {
+            await loginUser(email, password);
+            router.replace('/');
+        } catch (error: any) {
+            console.error(error);
+            let msg = 'No se pudo iniciar sesión. Verifique sus credenciales.';
+            if (error.code === 'auth/invalid-email') msg = 'El formato del correo no es válido.';
+            if (error.code === 'auth/user-not-found') msg = 'No existe una cuenta con este correo.';
+            if (error.code === 'auth/wrong-password') msg = 'Contraseña incorrecta.';
+            if (error.code === 'auth/invalid-credential') msg = 'Credenciales inválidas.';
+            if (error.code === 'auth/too-many-requests') msg = 'Demasiados intentos fallidos. Intente más tarde.';
+            
+            Alert.alert('Error de Inicio de Sesión', msg);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     return (
         <ScrollView style={styles.contentContainer} contentContainerStyle={styles.container}>
@@ -42,8 +70,12 @@ export default function Login() {
                         <View style={styles.passwordContainer}>
                             <TextInput style={[styles.input, { flex: 1, borderWidth: 0 }]} placeholder="Ingrese su contraseña" placeholderTextColor={'gray'} value={password} onChangeText={setPassword} secureTextEntry />
                         </View>
-                        <TouchableOpacity style={styles.btnLogin} activeOpacity={0.8}>
-                            <Text style={styles.btnLoginTxt}>Iniciar Sesión</Text>
+                        <TouchableOpacity style={styles.btnLogin} activeOpacity={0.8} onPress={handleLogin} disabled={loading}>
+                            {loading ? (
+                                <ActivityIndicator color="#fff" />
+                            ) : (
+                                <Text style={styles.btnLoginTxt}>Iniciar Sesión</Text>
+                            )}
                         </TouchableOpacity>
                     </View>
 

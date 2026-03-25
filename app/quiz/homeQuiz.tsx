@@ -2,7 +2,7 @@ import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { Link } from 'expo-router';
 import React from 'react';
 import { ScrollView, StatusBar, Text, TouchableOpacity, View } from 'react-native';
-import styles from '../constants/styleQuiz';
+import styles from '../../constants/styleQuiz';
 
 export default function HomeQuiz() {
     const handleStartQuiz = () => {
@@ -85,7 +85,7 @@ export default function HomeQuiz() {
 
             <View style={styles.btnContainer}>
                 <TouchableOpacity style={styles.btnStart} onPress={handleStartQuiz} activeOpacity={0.9} >
-                    <Link href="/quiz" >
+                    <Link href="/quiz/quiz" >
                         <Text style={styles.btnTxt}>Iniciar Quiz</Text>
                         <MaterialCommunityIcons name="arrow-right" size={20} color="#ffffff" />
                     </Link>

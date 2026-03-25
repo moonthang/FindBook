@@ -3,7 +3,7 @@ import { Link } from 'expo-router';
 import React from 'react';
 import { Image, StatusBar, Text, TouchableOpacity, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import styles from '../constants/styleSwipe';
+import styles from '../../constants/styleSwipe';
 
 export default function Swipe() {
     return (
