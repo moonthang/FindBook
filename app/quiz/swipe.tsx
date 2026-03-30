@@ -1,8 +1,7 @@
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { Link } from 'expo-router';
 import React from 'react';
-import { Image, StatusBar, Text, TouchableOpacity, View } from 'react-native';
-import { ScrollView } from 'react-native-gesture-handler';
+import { Image, ScrollView, StatusBar, Text, TouchableOpacity, View } from 'react-native';
 import styles from '../../constants/styleSwipe';
 
 export default function Swipe() {
