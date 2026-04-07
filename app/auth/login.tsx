@@ -70,6 +70,7 @@ export default function Login() {
                         <View style={styles.passwordContainer}>
                             <TextInput style={[styles.input, { flex: 1, borderWidth: 0 }]} placeholder="Ingrese su contraseña" placeholderTextColor={'gray'} value={password} onChangeText={setPassword} secureTextEntry />
                         </View>
+ HEAD
                         <TouchableOpacity style={styles.btnLogin} activeOpacity={0.8} onPress={handleLogin} disabled={loading}>
                             {loading ? (
                                 <ActivityIndicator color="#fff" />
@@ -77,6 +78,13 @@ export default function Login() {
                                 <Text style={styles.btnLoginTxt}>Iniciar Sesión</Text>
                             )}
                         </TouchableOpacity>
+=======
+                        <View style={styles.btnLoginContainer}>
+  <TouchableOpacity style={styles.btnLogin} activeOpacity={0.8}>
+    <Text style={styles.btnLoginTxt}>Iniciar Sesión</Text>
+  </TouchableOpacity>
+</View>
+ 8b555de (ajuste de botones)
                     </View>
 
                     <View style={styles.dividerContainer}>

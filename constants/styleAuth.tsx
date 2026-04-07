@@ -13,10 +13,13 @@ export const styles = StyleSheet.create({
         paddingHorizontal: 24,
         paddingTop: 50,
     },
-    content: {
-        paddingHorizontal: 25,
-        justifyContent: 'center',
-    },
+   content: {
+    paddingHorizontal: 25,
+    justifyContent: 'center',
+    width: '100%',
+    maxWidth: 600,
+    alignSelf: 'center',
+},
     containerLogo: {
         alignItems: 'center',
         marginBottom: 20,
@@ -45,16 +48,19 @@ export const styles = StyleSheet.create({
         marginBottom: 15,
     },
     cardContainer: {
-        backgroundColor: 'white',
-        borderWidth: 1,
-        borderColor: Colors.light.borderColor,
-        borderRadius: 20,
-        padding: 20,
-        shadowColor: Colors.light.text,
-    },
+    backgroundColor: 'white',
+    borderWidth: 1,
+    borderColor: Colors.light.borderColor,
+    borderRadius: 20,
+    padding: 20,
+    shadowColor: Colors.light.text,
+
+    alignItems: 'center', 
+},
     form: {
-        width: '100%',
-    },
+    width: '100%',
+    maxWidth: 400,
+},
     label: {
         fontSize: 14,
         fontWeight: '600',
@@ -75,6 +81,11 @@ export const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
     },
+    btnLoginContainer: {
+    width: '100%',
+    alignItems: 'center',
+    marginTop: 10,
+},
     txtForgot: {
         color: Colors.light.colorPrimary,
         fontSize: 14,
@@ -90,13 +101,17 @@ export const styles = StyleSheet.create({
         paddingRight: 15,
         marginBottom: 25,
     },
-    btnLogin: {
-        backgroundColor: Colors.light.colorPrimary,
-        height: 55,
-        borderRadius: 12,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
+btnLogin: {
+    backgroundColor: Colors.light.colorPrimary,
+    paddingVertical: 16,
+    paddingHorizontal: 28,
+    borderRadius: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+
+    width: '100%',
+    maxWidth: 280, 
+},
     btnLoginTxt: {
         color: Colors.light.background,
         fontSize: 18,
@@ -119,20 +134,24 @@ export const styles = StyleSheet.create({
         fontWeight: '600',
     },
     socialContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        gap: 15,
-    },
-    btnSocial: {
-        flex: 1,
-        height: 55,
-        borderWidth: 1,
-        borderColor: Colors.light.borderColor,
-        borderRadius: 12,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: Colors.light.background,
-    },
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: 12,
+    flexWrap: 'wrap',
+},
+
+btnSocial: {
+    paddingVertical: 14,
+    paddingHorizontal: 20,
+    borderWidth: 1,
+    borderColor: Colors.light.borderColor,
+    borderRadius: 12,
+    backgroundColor: Colors.light.background,
+    alignItems: 'center',
+
+    minWidth: 120,
+    maxWidth: 160,
+},
     txtSocial: {
         fontSize: 16,
         fontWeight: '600',

@@ -117,6 +117,7 @@ export default function Register() {
                         <View style={styles.passwordContainer}>
                             <TextInput style={[styles.input, { flex: 1, borderWidth: 0 }]} placeholder="Confirme su contraseña" placeholderTextColor={'gray'} value={confirmPassword} onChangeText={setConfirmPassword} secureTextEntry />
                         </View>
+ HEAD
                         <TouchableOpacity style={[styles.btnLogin, loading && { opacity: 0.8 }]} activeOpacity={0.8} onPress={handleRegister} disabled={loading} >
                             {loading ? (
                                 <ActivityIndicator color="#fff" />
@@ -124,6 +125,13 @@ export default function Register() {
                                 <Text style={styles.btnLoginTxt}>Crear cuenta</Text>
                             )}
                         </TouchableOpacity>
+
+                      <View style={styles.btnLoginContainer}>
+    <TouchableOpacity style={styles.btnLogin} activeOpacity={0.8}>
+        <Text style={styles.btnLoginTxt}>Crear cuenta</Text>
+    </TouchableOpacity>
+</View>
+ 8b555de (ajuste de botones)
                     </View>
 
                     <View style={styles.dividerContainer}>
