@@ -29,7 +29,7 @@ export default function Login() {
             if (error.code === 'auth/wrong-password') msg = 'Contraseña incorrecta.';
             if (error.code === 'auth/invalid-credential') msg = 'Credenciales inválidas.';
             if (error.code === 'auth/too-many-requests') msg = 'Demasiados intentos fallidos. Intente más tarde.';
-            
+
             Alert.alert('Error de Inicio de Sesión', msg);
         } finally {
             setLoading(false);
@@ -40,7 +40,7 @@ export default function Login() {
         <ScrollView style={styles.contentContainer} contentContainerStyle={styles.container}>
             <View>
                 <Link href="/" asChild>
-                    <TouchableOpacity style={styles.btnBack} >
+                    <TouchableOpacity style={styles.btnBack}>
                         <Ionicons name="chevron-back-circle-outline" size={32} color="black" />
                     </TouchableOpacity>
                 </Link>
@@ -54,37 +54,54 @@ export default function Login() {
                     </View>
                     <Text style={styles.subtitle}>Inicie sesión para continuar y encontrar su próxima lectura.</Text>
                 </View>
-
             </View>
+
             <View style={styles.content}>
                 <View style={styles.cardContainer}>
                     <View style={styles.form}>
                         <Text style={styles.label}>Correo electrónico</Text>
-                        <TextInput style={styles.input} placeholder="correo@ejemplo.com" placeholderTextColor={'gray'} value={email} onChangeText={setEmail} keyboardType="email-address" autoCapitalize="none" />
+                        <TextInput
+                            style={styles.input}
+                            placeholder="correo@ejemplo.com"
+                            placeholderTextColor={'gray'}
+                            value={email}
+                            onChangeText={setEmail}
+                            keyboardType="email-address"
+                            autoCapitalize="none"
+                        />
+
                         <View style={styles.passwordHeader}>
                             <Text style={styles.label}>Contraseña</Text>
                             <Link href=".." style={styles.txtForgot}>
                                 ¿Olvidaste tu contraseña?
                             </Link>
                         </View>
+
                         <View style={styles.passwordContainer}>
-                            <TextInput style={[styles.input, { flex: 1, borderWidth: 0 }]} placeholder="Ingrese su contraseña" placeholderTextColor={'gray'} value={password} onChangeText={setPassword} secureTextEntry />
+                            <TextInput
+                                style={[styles.input, { flex: 1, borderWidth: 0 }]}
+                                placeholder="Ingrese su contraseña"
+                                placeholderTextColor={'gray'}
+                                value={password}
+                                onChangeText={setPassword}
+                                secureTextEntry
+                            />
                         </View>
- HEAD
-                        <TouchableOpacity style={styles.btnLogin} activeOpacity={0.8} onPress={handleLogin} disabled={loading}>
-                            {loading ? (
-                                <ActivityIndicator color="#fff" />
-                            ) : (
-                                <Text style={styles.btnLoginTxt}>Iniciar Sesión</Text>
-                            )}
-                        </TouchableOpacity>
-=======
+
                         <View style={styles.btnLoginContainer}>
-  <TouchableOpacity style={styles.btnLogin} activeOpacity={0.8}>
-    <Text style={styles.btnLoginTxt}>Iniciar Sesión</Text>
-  </TouchableOpacity>
-</View>
- 8b555de (ajuste de botones)
+                            <TouchableOpacity
+                                style={styles.btnLogin}
+                                activeOpacity={0.8}
+                                onPress={handleLogin}
+                                disabled={loading}
+                            >
+                                {loading ? (
+                                    <ActivityIndicator color="#fff" />
+                                ) : (
+                                    <Text style={styles.btnLoginTxt}>Iniciar Sesión</Text>
+                                )}
+                            </TouchableOpacity>
+                        </View>
                     </View>
 
                     <View style={styles.dividerContainer}>

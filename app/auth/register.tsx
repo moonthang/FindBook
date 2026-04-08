@@ -54,7 +54,7 @@ export default function Register() {
                 [{ text: 'OK', onPress: () => router.replace('/auth/login') }]
             );
         } catch (error: any) {
-            console.error("Error en el registro:", error);
+            console.error('Error en el registro:', error);
             let errorMessage = 'Error al crear la cuenta';
 
             if (error.code) {
@@ -80,7 +80,7 @@ export default function Register() {
         <ScrollView style={styles.contentContainer} contentContainerStyle={styles.container}>
             <View>
                 <Link href="/" asChild>
-                    <TouchableOpacity style={styles.btnBack} >
+                    <TouchableOpacity style={styles.btnBack}>
                         <Ionicons name="chevron-back-circle-outline" size={32} color="black" />
                     </TouchableOpacity>
                 </Link>
@@ -100,43 +100,86 @@ export default function Register() {
                 <View style={styles.cardContainer}>
                     <View style={styles.form}>
                         <Text style={styles.label}>Nombre</Text>
-                        <TextInput style={styles.input} placeholder="Ingrese su nombre" placeholderTextColor={'gray'} autoCapitalize="words" value={name} onChangeText={setName} />
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Ingrese su nombre"
+                            placeholderTextColor={'gray'}
+                            autoCapitalize="words"
+                            value={name}
+                            onChangeText={setName}
+                        />
+
                         <Text style={styles.label}>Correo electrónico</Text>
-                        <TextInput style={styles.input} placeholder="correo@ejemplo.com" placeholderTextColor={'gray'} value={email} onChangeText={setEmail} keyboardType="email-address" autoCapitalize="none" />
+                        <TextInput
+                            style={styles.input}
+                            placeholder="correo@ejemplo.com"
+                            placeholderTextColor={'gray'}
+                            value={email}
+                            onChangeText={setEmail}
+                            keyboardType="email-address"
+                            autoCapitalize="none"
+                        />
+
                         <Text style={styles.label}>Fecha de nacimiento</Text>
-                        <TextInput style={styles.input} placeholder="DD-MM-AAAA" placeholderTextColor={'gray'} value={birthDate} onChangeText={handleDateChange} keyboardType="number-pad" maxLength={10} />
+                        <TextInput
+                            style={styles.input}
+                            placeholder="DD-MM-AAAA"
+                            placeholderTextColor={'gray'}
+                            value={birthDate}
+                            onChangeText={handleDateChange}
+                            keyboardType="number-pad"
+                            maxLength={10}
+                        />
+
                         <View style={styles.passwordHeader}>
                             <Text style={styles.label}>Contraseña</Text>
                         </View>
+
                         <View style={styles.passwordContainer}>
-                            <TextInput style={[styles.input, { flex: 1, borderWidth: 0 }]} placeholder="Ingrese su contraseña" placeholderTextColor={'gray'} value={password} onChangeText={setPassword} secureTextEntry />
+                            <TextInput
+                                style={[styles.input, { flex: 1, borderWidth: 0 }]}
+                                placeholder="Ingrese su contraseña"
+                                placeholderTextColor={'gray'}
+                                value={password}
+                                onChangeText={setPassword}
+                                secureTextEntry
+                            />
                         </View>
+
                         <View style={styles.passwordHeader}>
                             <Text style={styles.label}>Confirmar contraseña</Text>
                         </View>
-                        <View style={styles.passwordContainer}>
-                            <TextInput style={[styles.input, { flex: 1, borderWidth: 0 }]} placeholder="Confirme su contraseña" placeholderTextColor={'gray'} value={confirmPassword} onChangeText={setConfirmPassword} secureTextEntry />
-                        </View>
- HEAD
-                        <TouchableOpacity style={[styles.btnLogin, loading && { opacity: 0.8 }]} activeOpacity={0.8} onPress={handleRegister} disabled={loading} >
-                            {loading ? (
-                                <ActivityIndicator color="#fff" />
-                            ) : (
-                                <Text style={styles.btnLoginTxt}>Crear cuenta</Text>
-                            )}
-                        </TouchableOpacity>
 
-                      <View style={styles.btnLoginContainer}>
-    <TouchableOpacity style={styles.btnLogin} activeOpacity={0.8}>
-        <Text style={styles.btnLoginTxt}>Crear cuenta</Text>
-    </TouchableOpacity>
-</View>
- 8b555de (ajuste de botones)
+                        <View style={styles.passwordContainer}>
+                            <TextInput
+                                style={[styles.input, { flex: 1, borderWidth: 0 }]}
+                                placeholder="Confirme su contraseña"
+                                placeholderTextColor={'gray'}
+                                value={confirmPassword}
+                                onChangeText={setConfirmPassword}
+                                secureTextEntry
+                            />
+                        </View>
+
+                        <View style={styles.btnLoginContainer}>
+                            <TouchableOpacity
+                                style={[styles.btnLogin, loading && { opacity: 0.8 }]}
+                                activeOpacity={0.8}
+                                onPress={handleRegister}
+                                disabled={loading}
+                            >
+                                {loading ? (
+                                    <ActivityIndicator color="#fff" />
+                                ) : (
+                                    <Text style={styles.btnLoginTxt}>Crear cuenta</Text>
+                                )}
+                            </TouchableOpacity>
+                        </View>
                     </View>
 
                     <View style={styles.dividerContainer}>
                         <View style={styles.line} />
-                        <Text style={styles.txtDivider}>o registrese con</Text>
+                        <Text style={styles.txtDivider}>o regístrate con</Text>
                         <View style={styles.line} />
                     </View>
 
@@ -152,7 +195,7 @@ export default function Register() {
             </View>
 
             <View style={styles.contentSecundary}>
-                <Text style={styles.subtitle}>Ya tienes una cuenta?</Text>
+                <Text style={styles.subtitle}>¿Ya tienes una cuenta?</Text>
                 <Link href="/auth/login" style={styles.txtForgot}>
                     Inicia sesión aquí
                 </Link>
