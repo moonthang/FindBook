@@ -1,38 +1,21 @@
 import { Ionicons } from '@expo/vector-icons';
-import { Link, useRouter } from 'expo-router';
+import { Link, router } from 'expo-router';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 import React, { useState } from 'react';
-import { ActivityIndicator, Alert, Image, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Alert, Image, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { styles } from '../../constants/styleAuth';
-import { loginUser } from '../../service/authService';
+import { auth } from '../../firebaseConfig';
 
 export default function Login() {
-    const router = useRouter();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [loading, setLoading] = useState(false);
 
     const handleLogin = async () => {
-        if (!email || !password) {
-            Alert.alert('Error', 'Por favor, ingrese correo y contraseña.');
-            return;
-        }
-
-        setLoading(true);
         try {
-            await loginUser(email, password);
+            await signInWithEmailAndPassword(auth, email, password);
             router.replace('/');
         } catch (error: any) {
-            console.error(error);
-            let msg = 'No se pudo iniciar sesión. Verifique sus credenciales.';
-            if (error.code === 'auth/invalid-email') msg = 'El formato del correo no es válido.';
-            if (error.code === 'auth/user-not-found') msg = 'No existe una cuenta con este correo.';
-            if (error.code === 'auth/wrong-password') msg = 'Contraseña incorrecta.';
-            if (error.code === 'auth/invalid-credential') msg = 'Credenciales inválidas.';
-            if (error.code === 'auth/too-many-requests') msg = 'Demasiados intentos fallidos. Intente más tarde.';
-
-            Alert.alert('Error de Inicio de Sesión', msg);
-        } finally {
-            setLoading(false);
+            Alert.alert('Error', 'Correo o contraseña incorrectos');
         }
     };
 
@@ -60,48 +43,17 @@ export default function Login() {
                 <View style={styles.cardContainer}>
                     <View style={styles.form}>
                         <Text style={styles.label}>Correo electrónico</Text>
-                        <TextInput
-                            style={styles.input}
-                            placeholder="correo@ejemplo.com"
-                            placeholderTextColor={'gray'}
-                            value={email}
-                            onChangeText={setEmail}
-                            keyboardType="email-address"
-                            autoCapitalize="none"
-                        />
-
+                        <TextInput style={styles.input} placeholder="correo@ejemplo.com" placeholderTextColor={'gray'} value={email} onChangeText={setEmail} keyboardType="email-address" autoCapitalize="none" />
                         <View style={styles.passwordHeader}>
                             <Text style={styles.label}>Contraseña</Text>
-                            <Link href=".." style={styles.txtForgot}>
-                                ¿Olvidaste tu contraseña?
-                            </Link>
+                            <Link href=".." style={styles.txtForgot}>¿Olvidaste tu contraseña?</Link>
                         </View>
-
                         <View style={styles.passwordContainer}>
-                            <TextInput
-                                style={[styles.input, { flex: 1, borderWidth: 0 }]}
-                                placeholder="Ingrese su contraseña"
-                                placeholderTextColor={'gray'}
-                                value={password}
-                                onChangeText={setPassword}
-                                secureTextEntry
-                            />
+                            <TextInput style={[styles.input, { flex: 1, borderWidth: 0 }]} placeholder="Ingrese su contraseña" placeholderTextColor={'gray'} value={password} onChangeText={setPassword} secureTextEntry />
                         </View>
-
-                        <View style={styles.btnLoginContainer}>
-                            <TouchableOpacity
-                                style={styles.btnLogin}
-                                activeOpacity={0.8}
-                                onPress={handleLogin}
-                                disabled={loading}
-                            >
-                                {loading ? (
-                                    <ActivityIndicator color="#fff" />
-                                ) : (
-                                    <Text style={styles.btnLoginTxt}>Iniciar Sesión</Text>
-                                )}
-                            </TouchableOpacity>
-                        </View>
+                        <TouchableOpacity style={styles.btnLogin} activeOpacity={0.8} onPress={handleLogin}>
+                            <Text style={styles.btnLoginTxt}>Iniciar Sesión</Text>
+                        </TouchableOpacity>
                     </View>
 
                     <View style={styles.dividerContainer}>
@@ -123,9 +75,7 @@ export default function Login() {
 
             <View style={styles.contentSecundary}>
                 <Text style={styles.subtitle}>¿No tienes una cuenta?</Text>
-                <Link href="/auth/register" style={styles.txtForgot}>
-                    Regístrate aquí
-                </Link>
+                <Link href="/auth/register" style={styles.txtForgot}>Regístrate aquí</Link>
             </View>
         </ScrollView>
     );

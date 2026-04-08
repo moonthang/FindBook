@@ -1,13 +1,14 @@
 import { MaterialIcons } from '@expo/vector-icons';
-import { Link } from 'expo-router';
+import { router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, Alert, FlatList, Image, StatusBar, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, FlatList, Image, StatusBar, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import Header from '../../components/header';
 import styles from '../../constants/styleAdmin';
 import { Colors } from '../../constants/theme';
 import { Book, deleteBook, subscribeToBooks } from '../../service/bookService';
 
 export default function BookInventory() {
+    
     const [books, setBooks] = useState<Book[]>([]);
     const [loading, setLoading] = useState(true);
     const [searchQuery, setSearchQuery] = useState('');
@@ -22,33 +23,21 @@ export default function BookInventory() {
             },
             (error) => {
                 console.error("Error fetching books:", error);
-                Alert.alert('Error', 'No se pudieron cargar los libros');
+                window.alert('Error: No se pudieron cargar los libros');
                 setLoading(false);
             }
         );
-
         return () => unsubscribe();
     }, []);
 
-    const handleDelete = (book: Book) => {
-        Alert.alert(
-            'Eliminar Libro',
-            `¿Estás seguro de que deseas eliminar "${book.title}"?`,
-            [
-                { text: 'Cancelar', style: 'cancel' },
-                {
-                    text: 'Eliminar',
-                    style: 'destructive',
-                    onPress: async () => {
-                        try {
-                            await deleteBook(book.uid);
-                        } catch (error) {
-                            Alert.alert('Error', 'No se pudo eliminar el libro');
-                        }
-                    }
-                }
-            ]
-        );
+    const handleDelete = async (book: Book) => {
+        if (window.confirm(`¿Estás seguro de que deseas eliminar "${book.title}"?`)) {
+            try {
+                await deleteBook(book.uid);
+            } catch (error) {
+                window.alert('Error: No se pudo eliminar el libro');
+            }
+        }
     };
 
     const filteredBooks = books.filter(book =>
@@ -61,12 +50,10 @@ export default function BookInventory() {
             <View style={styles.rowCard}>
                 <View style={styles.rowMainSection}>
                     <View style={styles.coverContainer}>
-                        <Image  source={{ uri: book.coverUrl }} style={styles.cover} resizeMode="cover"/>
+                        <Image source={{ uri: book.coverUrl }} style={styles.cover} resizeMode="cover"/>
                     </View>
                     <View style={styles.itemInfo}>
-                        <Text style={styles.rowTitle} numberOfLines={2}>
-                            {book.title}
-                        </Text>
+                        <Text style={styles.rowTitle} numberOfLines={2}>{book.title}</Text>
                         <Text style={styles.rowSubtitle}>{book.pages} páginas</Text>
                     </View>
                 </View>
@@ -79,10 +66,10 @@ export default function BookInventory() {
                 </View>
 
                 <View style={styles.rowActions}>
-                    <TouchableOpacity style={styles.btnAction} onPress={() => {/* Navegar a edición */}}>
+                    <TouchableOpacity style={styles.btnAction} onPress={() => router.push({ pathname: '/admin/bookFrom', params: { bookId: book.uid } })}>
                         <MaterialIcons name="edit" size={22} color="#64748b" />
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.btnDelete} onPress={() => handleDelete(book)} >
+                    <TouchableOpacity style={styles.btnDelete} onPress={() => handleDelete(book)}>
                         <MaterialIcons name="delete-outline" size={22} color="#ef4444" />
                     </TouchableOpacity>
                 </View>
@@ -113,7 +100,7 @@ export default function BookInventory() {
                 </View>
                 {renderHeader()}
                 {loading ? (
-                    <ActivityIndicator  size="large" color={Colors.light.colorPrimary}  style={{ marginTop: 40 }} />
+                    <ActivityIndicator size="large" color={Colors.light.colorPrimary} style={{ marginTop: 40 }} />
                 ) : (
                     <FlatList
                         data={filteredBooks}
@@ -127,9 +114,7 @@ export default function BookInventory() {
                             <View style={styles.emptyState}>
                                 <MaterialIcons name="menu-book" size={48} color="#cbd5e1" />
                                 <Text style={styles.txtEmpty}>
-                                    {searchQuery 
-                                        ? 'No se encontraron libros' 
-                                        : 'No hay libros registrados'}
+                                    {searchQuery ? 'No se encontraron libros' : 'No hay libros registrados'}
                                 </Text>
                             </View>
                         }
@@ -137,11 +122,9 @@ export default function BookInventory() {
                 )}
             </View>
             <View style={[styles.fabContainer, { position: 'absolute', bottom: 30, right: 20 }]}>
-                <TouchableOpacity style={styles.fab} activeOpacity={0.9} onPress={() => Alert.alert('Info', 'Para crear un usuario, utiliza la función de registro. Crear usuario aquí cerraría tu sesión de administrador (Limitación de Firebase Client SDK).')}>
-                    <Link href="/admin/bookFrom">
-                        <MaterialIcons name="person-add" size={24} color="white" />
-                        <Text style={styles.txtFab}>Agregar Nuevo Libros</Text>
-                    </Link>
+                <TouchableOpacity style={styles.fab} activeOpacity={0.9} onPress={() => router.push('/admin/bookFrom')}>
+                    <MaterialIcons name="person-add" size={24} color="white" />
+                    <Text style={styles.txtFab}>Agregar Nuevo Libros</Text>
                 </TouchableOpacity>
             </View>
         </View>
