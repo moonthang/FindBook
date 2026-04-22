@@ -1,4 +1,4 @@
-import { addDoc, collection, deleteDoc, doc, onSnapshot, query, Timestamp } from 'firebase/firestore';
+import { addDoc, collection, deleteDoc, doc, documentId, getDocs, limit, onSnapshot, orderBy, query, Timestamp, updateDoc, where } from 'firebase/firestore';
 import { getDownloadURL, getStorage, ref, uploadBytes } from 'firebase/storage';
 import { db } from '../config/firebase';
 
@@ -71,4 +71,77 @@ export const createBook = async (bookData: any) => {
         updatedAt: Timestamp.now(),
     };
     await addDoc(collection(db, 'books'), dataToSave);
+};
+
+export const getLatestBooks = async (limitCount: number = 6): Promise<Book[]> => {
+    try {
+        const booksRef = collection(db, 'books');
+        const q = query(booksRef, orderBy('createdAt', 'desc'), limit(limitCount));
+        const querySnapshot = await getDocs(q);
+        
+        return querySnapshot.docs.map(doc => {
+            const data = doc.data();
+            return {
+                uid: doc.id,
+                title: data.title || '',
+                author: data.author || '',
+                description: data.description || '',
+                rating: data.rating?.toString() || '0',
+                pages: data.pages?.toString() || '0',
+                tags: data.tags || [],
+                coverUrl: data.coverUrl || '',
+                createdAt: data.createdAt?.toDate(),
+            } as Book;
+        });
+    } catch (error) {
+        console.error("Error fetching latest books:", error);
+        throw error;
+    }
+};
+
+export const updateBook = async (uid: string, bookData: Partial<Book>) => {
+    const bookRef = doc(db, 'books', uid);
+    const dataToUpdate = {
+        ...bookData,
+        updatedAt: Timestamp.now(),
+    };
+    await updateDoc(bookRef, dataToUpdate);
+};
+
+export const getBooksByIds = async (ids: string[]): Promise<Book[]> => {
+    if (!ids || ids.length === 0) return [];
+    
+    try {
+        const booksRef = collection(db, 'books');
+        const chunkSize = 10;
+        const allBooks: Book[] = [];
+        
+        for (let i = 0; i < ids.length; i += chunkSize) {
+            const chunk = ids.slice(i, i + chunkSize);
+            const q = query(booksRef, where(documentId(), 'in', chunk));
+            const querySnapshot = await getDocs(q);
+            
+            const chunkBooks = querySnapshot.docs.map(doc => {
+                const data = doc.data();
+                return {
+                    uid: doc.id,
+                    title: data.title || '',
+                    author: data.author || '',
+                    description: data.description || '',
+                    rating: data.rating?.toString() || '0',
+                    pages: data.pages?.toString() || '0',
+                    tags: data.tags || [],
+                    coverUrl: data.coverUrl || '',
+                    createdAt: data.createdAt?.toDate(),
+                } as Book;
+            });
+            
+            allBooks.push(...chunkBooks);
+        }
+        
+        return allBooks;
+    } catch (error) {
+        console.error("Error fetching books by IDs:", error);
+        throw error;
+    }
 };

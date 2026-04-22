@@ -1,6 +1,6 @@
 import { deleteApp, initializeApp } from 'firebase/app';
 import { createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword, signOut, updateProfile } from 'firebase/auth';
-import { collection, deleteDoc, doc, getDoc, getDocs, setDoc, updateDoc } from 'firebase/firestore';
+import { arrayRemove, arrayUnion, collection, deleteDoc, doc, getDoc, getDocs, setDoc, updateDoc } from 'firebase/firestore';
 import { auth, db } from '../config/firebase';
 
 export interface UserData {
@@ -138,6 +138,30 @@ export const updateUserData = async (uid: string, data: Partial<UserData>) => {
         }
     } catch (error) {
         console.error('Error actualizando usuario:', error);
+        throw error;
+    }
+};
+
+export const addToWatchlist = async (userUid: string, bookUid: string) => {
+    try {
+        const userRef = doc(db, 'users', userUid);
+        await updateDoc(userRef, {
+            watchlist: arrayUnion(bookUid)
+        });
+    } catch (error) {
+        console.error('Error adding to watchlist:', error);
+        throw error;
+    }
+};
+
+export const removeFromWatchlist = async (userUid: string, bookUid: string) => {
+    try {
+        const userRef = doc(db, 'users', userUid);
+        await updateDoc(userRef, {
+            watchlist: arrayRemove(bookUid)
+        });
+    } catch (error) {
+        console.error('Error removing from watchlist:', error);
         throw error;
     }
 };

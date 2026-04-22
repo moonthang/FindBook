@@ -1,12 +1,33 @@
 import { FontAwesome6, MaterialIcons } from '@expo/vector-icons';
-import { Link } from 'expo-router';
-import { Image, ScrollView, Text, TouchableOpacity, useWindowDimensions, View } from 'react-native';
+import { Link, useRouter } from 'expo-router';
+import React, { useEffect, useState } from 'react';
+import { ActivityIndicator, Image, ScrollView, Text, TouchableOpacity, useWindowDimensions, View } from 'react-native';
 import Carousel from 'react-native-reanimated-carousel';
 import Header from '../components/header';
 import styles from '../constants/stylehome';
+import { Colors } from '../constants/theme';
+import { Book, getLatestBooks } from '../service/bookService';
 
 export default function Home() {
   const { width } = useWindowDimensions();
+  const router = useRouter();
+  const [latestBooks, setLatestBooks] = useState<Book[]>([]);
+  const [loadingBooks, setLoadingBooks] = useState(true);
+
+  useEffect(() => {
+    const fetchLatestBooks = async () => {
+      try {
+        const data = await getLatestBooks(6);
+        setLatestBooks(data);
+      } catch (error) {
+        console.error("Error fetching latest books:", error);
+      } finally {
+        setLoadingBooks(false);
+      }
+    };
+
+    fetchLatestBooks();
+  }, []);
 
   const carouselImg = [
     { id: '1', uri: 'https://firebasestorage.googleapis.com/v0/b/amh26-d3e52.firebasestorage.app/o/img%2Fcrimen%20y%20castigo.jpg?alt=media&token=930e4fbd-ec35-478f-ad6b-9dfb96745098' },
@@ -79,6 +100,46 @@ export default function Home() {
           <Text style={styles.descriptionHow}>Guarda los libros que quieres leer en tu lista de pendientes. Puedes marcarlos como leídos cuando los termines de leer.</Text>
         </View>
       </View>
+
+      <Text style={styles.titlePrin}>
+        Últimos libros <Text style={styles.titlePrinWord}>agregados</Text>
+      </Text>
+
+      {loadingBooks ? (
+        <ActivityIndicator size="large" color={Colors.light.colorPrimary} style={{ marginVertical: 30 }} />
+      ) : (
+        <View style={{ marginVertical: 20, alignItems: 'center' }}>
+          <Carousel
+            loop={latestBooks.length > 1}
+            width={width > 800 ? 260 : width * 0.6}
+            height={width > 800 ? 420 : width * 0.95}
+            style={{ width: width, justifyContent: 'center' }}
+            autoPlay={true}
+            data={latestBooks}
+            scrollAnimationDuration={3000}
+            renderItem={({ item }) => (
+              <View style={styles.cardBook}>
+                <Image
+                  source={{ uri: item.coverUrl }}
+                  style={{ width: '100%', height: width > 800 ? 340 : width * 0.75, borderRadius: 10 }}
+                  resizeMode="cover"
+                />
+                <Text style={{ marginTop: 12, fontWeight: '700', fontSize: 14, color: '#1e293b', textAlign: 'center' }} numberOfLines={1}>
+                  {item.title}
+                </Text>
+                <Text style={{ fontSize: 12, color: '#64748b', marginTop: 2 }} numberOfLines={1}>
+                  {item.author}
+                </Text>
+              </View>
+            )}
+          />
+          <TouchableOpacity style={[styles.btnPrin, { marginTop: 25, width: width * 0.6, alignSelf: 'center' }]}>
+            <Link href="/booksPublic" asChild>
+              <Text style={styles.btnPrinTxt}>Ver todos</Text>
+            </Link>
+          </TouchableOpacity>
+        </View>
+      )}
 
       <View style={styles.containerRegister}>
         <Text style={styles.containerRegisterTitle}>¿Listo para conocer a tu próximo autor favorito?</Text>

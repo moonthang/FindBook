@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native';
 import { Colors } from '../constants/theme';
 
-const styles = StyleSheet.create({
+const stylesWL = StyleSheet.create({
     contentContainer: {
         flex: 1,
         backgroundColor: Colors.light.background,
@@ -175,4 +175,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default styles;
+export default stylesWL;

@@ -58,6 +58,15 @@ function DrawerLayout() {
         }}
       />
       <Drawer.Screen
+        name="booksPublic"
+        options={{
+          drawerLabel: 'Catalogo',
+          title: 'Libros',
+          drawerIcon: ({ color, size }) => (
+            <Ionicons name="book-outline" size={size} color={color} />),
+        }}
+      />
+      <Drawer.Screen
         name="quiz/homeQuiz"
         options={{
           drawerLabel: 'Quiz',
@@ -97,6 +106,17 @@ function DrawerLayout() {
           drawerItemStyle: { display: user ? 'flex' : 'none' },
           drawerIcon: ({ color, size }) => (
             <Ionicons name="person-outline" size={size} color={color} />),
+        }}
+      />
+      <Drawer.Screen
+        name="users/watchlistUser"
+        options={{
+          drawerLabel: 'Mis Libros',
+          title: 'Mis Libros',
+          drawerItemStyle: { display: user ? 'flex' : 'none' },
+          drawerIcon: ({ color, size }) => (
+            <Ionicons name="bookmarks" size={size} color={color} />
+          ),
         }}
       />
 

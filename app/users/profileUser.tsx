@@ -1,6 +1,6 @@
 import Header from '@/components/header';
 import { Feather } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
+import { Link, useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, Alert, Image, KeyboardTypeOptions, ScrollView, StatusBar, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import styles from '../../constants/styleUsers';
@@ -21,14 +21,7 @@ const ProfileField = ({ label, value, isEditing, onChangeText, editable = false,
         <Text style={styles.label}>{label}</Text>
         <View style={styles.input}>
             {isEditing && editable ? (
-                <TextInput 
-                    value={value} 
-                    onChangeText={onChangeText} 
-                    style={styles.placeholder} 
-                    autoCapitalize="words"
-                    keyboardType={keyboardType}
-                    maxLength={maxLength}
-                />
+                <TextInput value={value} onChangeText={onChangeText} style={styles.placeholder} autoCapitalize="words" keyboardType={keyboardType} maxLength={maxLength}/>
             ) : (
                 <Text style={styles.placeholder}>{value || 'No registrada'}</Text>
             )}
@@ -79,9 +72,9 @@ export default function UserProfile() {
         }
     };
 
-const handleUpdate = async () => {
+    const handleUpdate = async () => {
         if (!user || !editedName.trim()) return;
-        
+
         if (editedBirthDate) {
             const dateRegex = /^\d{2}-\d{2}-\d{4}$/;
             if (!dateRegex.test(editedBirthDate)) {
@@ -89,14 +82,14 @@ const handleUpdate = async () => {
                 return;
             }
         }
-        
+
         try {
             setLoading(true);
-            await updateUserData(user.uid, { 
+            await updateUserData(user.uid, {
                 displayName: editedName,
-                birthDate: editedBirthDate 
+                birthDate: editedBirthDate
             });
-            
+
             setUser({ ...user, displayName: editedName, birthDate: editedBirthDate });
             setIsEditing(false);
             Alert.alert('Éxito', 'Perfil actualizado correctamente.');
@@ -107,7 +100,7 @@ const handleUpdate = async () => {
         }
     };
 
-const handleLogout = async () => {
+    const handleLogout = async () => {
         try {
             await logoutUser();
             router.replace('/auth/login');
@@ -116,7 +109,7 @@ const handleLogout = async () => {
         }
     };
 
-const handleDeleteAccount = () => {
+    const handleDeleteAccount = () => {
         Alert.alert(
             'Eliminar Cuenta',
             '¿Estás seguro de que deseas eliminar tu cuenta permanentemente? Esta acción no se puede deshacer.',
@@ -145,17 +138,17 @@ const handleDeleteAccount = () => {
         );
     };
 
-const getInitials = (name: string) => {
+    const getInitials = (name: string) => {
         return name.split(' ').map((n) => n[0]).join('').substring(0, 2).toUpperCase();
     };
 
-const formatDate = (dateString?: string) => {
+    const formatDate = (dateString?: string) => {
         if (!dateString) return '';
         const date = new Date(dateString);
         return date.toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
     };
 
-if (loading && !user) {
+    if (loading && !user) {
         return (
             <View style={[styles.contentContainer, { justifyContent: 'center', alignItems: 'center' }]}>
                 <ActivityIndicator size="large" color="#F37032" />
@@ -163,7 +156,7 @@ if (loading && !user) {
         );
     }
 
-return (
+    return (
         <ScrollView style={styles.contentContainer}>
             <Header />
             <StatusBar barStyle="dark-content" backgroundColor="#f8f6f6" />
@@ -184,28 +177,9 @@ return (
                 </View>
 
                 <View style={styles.dataSection}>
-                    <ProfileField 
-                        label="Nombre Completo" 
-                        value={isEditing ? editedName : (user?.displayName || '')} 
-                        isEditing={isEditing}  
-                        onChangeText={setEditedName} 
-                        editable={true}
-                    />
-                    <ProfileField 
-                        label="Fecha de Nacimiento" 
-                        value={isEditing ? editedBirthDate : (user?.birthDate || '')} 
-                        isEditing={isEditing} 
-                        onChangeText={handleDateChange} 
-                        editable={true}
-                        keyboardType="number-pad"
-                        maxLength={10}
-                    />
-                    <ProfileField 
-                        label="Correo Electrónico" 
-                        value={user?.email || ''} 
-                        isEditing={isEditing} 
-                        editable={false}
-                    />
+                    <ProfileField label="Nombre Completo" value={isEditing ? editedName : (user?.displayName || '')}isEditing={isEditing} onChangeText={setEditedName} editable={true} />
+                    <ProfileField label="Fecha de Nacimiento" value={isEditing ? editedBirthDate : (user?.birthDate || '')} isEditing={isEditing} onChangeText={handleDateChange} editable={true} keyboardType="number-pad" maxLength={10}/>
+                    <ProfileField label="Correo Electrónico"value={user?.email || ''} isEditing={isEditing} editable={false} />
                     <View style={styles.btnContainer}>
                         {isEditing ? (
                             <TouchableOpacity style={styles.btnEdit} activeOpacity={0.8} onPress={handleUpdate}>
@@ -224,7 +198,7 @@ return (
                                 </TouchableOpacity>
                             </>
                         )}
-                        
+
                         {isEditing && (
                             <TouchableOpacity style={styles.btnDelete} activeOpacity={0.7} onPress={() => {
                                 setIsEditing(false);
@@ -237,39 +211,40 @@ return (
                     </View>
                 </View>
 
-                <TouchableOpacity style={styles.bookSavedCard} activeOpacity={0.9}>
-        <View style={styles.circleTop} />
-        <View style={styles.circleBottom} />
+                <Link href="/users/watchlistUser" asChild>
+                    <TouchableOpacity style={styles.bookSavedCard} activeOpacity={0.9}>
+                        <View style={styles.circleTop} />
+                        <View style={styles.circleBottom} />
 
-        <View style={styles.bookSavedContent}>
-            <View style={styles.booksTxtSection}>
-                <View style={styles.booksHeader}>
-                    <Text style={styles.booksLabel}>Tu Colección</Text>
-                </View>
-                <Text style={styles.booksTitle}>Libros Guardados</Text>
-                <Text style={styles.booksSubtitle}>Encuentra los libros esperando tu atención</Text>
-            </View>
+                        <View style={styles.bookSavedContent}>
+                            <View style={styles.booksTxtSection}>
+                                <View style={styles.booksHeader}>
+                                    <Text style={styles.booksLabel}>Tu Colección</Text>
+                                </View>
+                                <Text style={styles.booksTitle}>Libros Guardados</Text>
+                                <Text style={styles.booksSubtitle}>Encuentra los libros esperando tu atención</Text>
+                            </View>
 
-            <View style={styles.bookStack}>
-                <View style={[styles.bookItem, styles.bookItem1]}>
-                    <Image
-                        source={{ uri: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDVxHnvwWRddnjnjrg0toH5mD-matt8VriIipHPO_chW8oTDoDBxir1dtFfwrCPXpbYjfrB8vgUnA2pMdL_B-18W6yfhRduGmel8s-9n-qQl_mY2G6tNwnNU-4MXFIap57tGJgLqNMw9iLpakLEjoGe3eimKH7o-pbENrQQm4t_fDi5AYjBZZQW8O1euDTmHNrf6EaUOKQVd9F6P_zmmyZaXUXhjbRXBRAHgI1p9fnaerGwFGgM0OcqG8Nr5BP5WphDWvhCPAcp1Q' }}
-                        style={styles.bookCover}
-                    />
-                </View>
-                <View style={[styles.bookItem, styles.bookItem2]}>
-                    <Image
-                        source={{ uri: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBpHS-8eVSjuXbCsJgPtS42d0OtWvVuOUadBX1av3qcscNnItqzPVvR3SiInAeStk3yMveZ4qgqVAV0nIZh0Eqe8o9FtOqG3azTMBfW5aiYbD9Gkf-YQ8LKbZ2WPYDbNQHXsxvPYeAyszlNXiFKIi8DDq2bFVljUfgMSjrwtOeuzDSrnHx9bra6cm6vAEqlRP-dzD6nqzAKZy2OtN1fB5wUowLzD7-W-WrLDuWzKh3lsVHK73tufG66uNZwFCgSiva3s76zUljy3g' }}
-                        style={styles.bookCover}
-                    />
-                </View>
-                <View style={[styles.bookItem, styles.bookItem3]}>
-                    <Feather name="plus-circle" size={24} color="white" />
-                </View>
-            </View>
-        </View>
-    </TouchableOpacity>
-
+                            <View style={styles.bookStack}>
+                                <View style={[styles.bookItem, styles.bookItem1]}>
+                                    <Image
+                                        source={{ uri: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDVxHnvwWRddnjnjrg0toH5mD-matt8VriIipHPO_chW8oTDoDBxir1dtFfwrCPXpbYjfrB8vgUnA2pMdL_B-18W6yfhRduGmel8s-9n-qQl_mY2G6tNwnNU-4MXFIap57tGJgLqNMw9iLpakLEjoGe3eimKH7o-pbENrQQm4t_fDi5AYjBZZQW8O1euDTmHNrf6EaUOKQVd9F6P_zmmyZaXUXhjbRXBRAHgI1p9fnaerGwFGgM0OcqG8Nr5BP5WphDWvhCPAcp1Q' }}
+                                        style={styles.bookCover}
+                                    />
+                                </View>
+                                <View style={[styles.bookItem, styles.bookItem2]}>
+                                    <Image
+                                        source={{ uri: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBpHS-8eVSjuXbCsJgPtS42d0OtWvVuOUadBX1av3qcscNnItqzPVvR3SiInAeStk3yMveZ4qgqVAV0nIZh0Eqe8o9FtOqG3azTMBfW5aiYbD9Gkf-YQ8LKbZ2WPYDbNQHXsxvPYeAyszlNXiFKIi8DDq2bFVljUfgMSjrwtOeuzDSrnHx9bra6cm6vAEqlRP-dzD6nqzAKZy2OtN1fB5wUowLzD7-W-WrLDuWzKh3lsVHK73tufG66uNZwFCgSiva3s76zUljy3g' }}
+                                        style={styles.bookCover}
+                                    />
+                                </View>
+                                <View style={[styles.bookItem, styles.bookItem3]}>
+                                    <Feather name="plus-circle" size={24} color="white" />
+                                </View>
+                            </View>
+                        </View>
+                    </TouchableOpacity>
+                </Link>
                 <View style={{ height: 40 }} />
             </ScrollView>
         </ScrollView>
