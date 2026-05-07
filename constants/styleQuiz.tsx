@@ -33,12 +33,18 @@ export const styles = StyleSheet.create({
         width: 48,
     },
     container: {
-        paddingBottom: 120,
-    },
+    flexGrow: 1,
+    alignItems: 'center',
+    paddingBottom: 120,
+},
     bannerContainer: {
-        paddingHorizontal: 16,
-        paddingVertical: 12,
-    },
+    width: '100%',
+    maxWidth: 900,
+    alignSelf: 'center',
+
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+},
     imgBanner: {
         width: '100%',
         height: 320,
@@ -46,10 +52,14 @@ export const styles = StyleSheet.create({
         borderRadius: 12,
     },
     content: {
-        paddingHorizontal: 24,
-        paddingTop: 32,
-        paddingBottom: 16,
-    },
+    width: '100%',
+    maxWidth: 900,
+    alignSelf: 'center',
+
+    paddingHorizontal: 24,
+    paddingTop: 32,
+    paddingBottom: 16,
+},
     titlePrin: {
         fontSize: 32,
         fontWeight: '800',
@@ -66,20 +76,25 @@ export const styles = StyleSheet.create({
         lineHeight: 24,
         marginBottom: 32,
     },
-    statsContainer: {
-        flexDirection: 'row',
-        gap: 12,
-        marginBottom: 40,
-    },
-    statCard: {
-        flex: 1,
-        minWidth: 140,
-        backgroundColor: 'rgba(238, 108, 43, 0.1)',
-        borderRadius: 12,
-        padding: 20,
-        borderWidth: 1,
-        borderColor: 'rgba(238, 108, 43, 0.2)',
-    },
+   statsContainer: {
+    width: '100%',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    gap: 12,
+    marginBottom: 40,
+},
+  statCard: {
+    flex: 1,
+    minWidth: 140,
+    maxWidth: 250,
+
+    backgroundColor: 'rgba(238, 108, 43, 0.1)',
+    borderRadius: 12,
+    padding: 20,
+    borderWidth: 1,
+    borderColor: 'rgba(238, 108, 43, 0.2)',
+},
     statTitle: {
         flexDirection: 'row',
         alignItems: 'center',
@@ -99,9 +114,12 @@ export const styles = StyleSheet.create({
         color: Colors.light.text,
     },
     featuresContainer: {
-        gap: 16,
-        marginBottom: 32,
-    },
+    width: '100%',
+    maxWidth: 850,
+    alignSelf: 'center',
+    gap: 16,
+    marginBottom: 32,
+},
     featureItem: {
         flexDirection: 'row',
         alignItems: 'flex-start',
@@ -134,24 +152,31 @@ export const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
+
     backgroundColor: Colors.light.background,
+
     paddingHorizontal: 24,
     paddingTop: 16,
-    paddingBottom: 50,
+    paddingBottom: 40,
+
     borderTopWidth: 1,
     borderTopColor: 'rgba(0,0,0,0.05)',
+
     alignItems: 'center',
 },
-   btnStart: {
+  btnStart: {
     backgroundColor: Colors.light.colorPrimary,
-    borderRadius: 12,
+
+    borderRadius: 14,
     paddingVertical: 18,
     paddingHorizontal: 28,
+
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    width: '80%',
-    maxWidth: 320,
+
+    width: '100%',
+    maxWidth: 420,
 },
     btnTxt: {
         color: Colors.light.background,
@@ -181,10 +206,14 @@ export const styles = StyleSheet.create({
         borderRadius: 4,
     },
     questionContainer: {
-        paddingHorizontal: 16,
-        paddingTop: 32,
-        paddingBottom: 24,
-    },
+    width: '100%',
+    maxWidth: 900,
+    alignSelf: 'center',
+
+    paddingHorizontal: 24,
+    paddingTop: 32,
+    paddingBottom: 24,
+},
     txtQuestion: {
         fontSize: 24,
         fontWeight: '700',
@@ -192,19 +221,26 @@ export const styles = StyleSheet.create({
         lineHeight: 32,
     },
     optionsContainer: {
-        paddingHorizontal: 16,
-        gap: 16,
-    },
+    width: '100%',
+    maxWidth: 900,
+    alignSelf: 'center',
+
+    paddingHorizontal: 24,
+    gap: 16,
+},
     option: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: 16,
-        backgroundColor: Colors.light.background,
-        padding: 16,
-        borderRadius: 12,
-        borderWidth: 2,
-        borderColor: 'transparent',
-    },
+    width: '100%',
+
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 16,
+
+    backgroundColor: Colors.light.background,
+    padding: 16,
+    borderRadius: 12,
+    borderWidth: 2,
+    borderColor: 'transparent',
+},
     optionSelected: {
         borderColor: Colors.light.colorPrimary,
     },

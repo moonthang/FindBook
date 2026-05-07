@@ -16,7 +16,10 @@ export default function Createusers() {
         <ScrollView style={styles.contentContainer}>
             <Header />
             <StatusBar barStyle="dark-content" backgroundColor="#f8f6f6" />
-            <ScrollView style={styles.container} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false} >
+            <ScrollView
+  style={styles.contentContainer}
+  contentContainerStyle={styles.container}
+>
                 <View style={styles.titleContainer}>
                     <FontAwesome6 name="user-group" size={24} color="#F37032" />
                     <View style={styles.titleSection}>

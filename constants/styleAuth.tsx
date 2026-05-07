@@ -7,18 +7,22 @@ export const styles = StyleSheet.create({
         backgroundColor: Colors.light.backgroundSecondary,
     },
     container: {
-        paddingBottom: 40,
-    },
+    flexGrow: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingBottom: 40,
+    paddingTop: 20,
+},
     btnBack: {
         paddingHorizontal: 24,
         paddingTop: 50,
     },
-   content: {
+  content: {
+    width: '100%',
+    maxWidth: 520,
+    alignSelf: 'center',
     paddingHorizontal: 25,
     justifyContent: 'center',
-    width: '100%',
-    maxWidth: 600,
-    alignSelf: 'center',
 },
     containerLogo: {
         alignItems: 'center',
@@ -48,18 +52,21 @@ export const styles = StyleSheet.create({
         marginBottom: 15,
     },
     cardContainer: {
+    width: '100%',
+    maxWidth: 480,
+    alignSelf: 'center',
     backgroundColor: 'white',
     borderWidth: 1,
     borderColor: Colors.light.borderColor,
     borderRadius: 20,
-    padding: 20,
+    padding: 24,
     shadowColor: Colors.light.text,
-
-    alignItems: 'center', 
+    alignItems: 'center',
 },
     form: {
     width: '100%',
     maxWidth: 400,
+    alignSelf: 'center',
 },
     label: {
         fontSize: 14,
@@ -108,9 +115,8 @@ btnLogin: {
     borderRadius: 12,
     justifyContent: 'center',
     alignItems: 'center',
-
     width: '100%',
-    maxWidth: 280, 
+    maxWidth: 320,
 },
     btnLoginTxt: {
         color: Colors.light.background,
@@ -158,9 +164,12 @@ btnSocial: {
         color: Colors.light.text,
     },
     contentSecundary: {
-        paddingTop: 20,
-        paddingHorizontal: 25,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
+    width: '100%',
+    maxWidth: 520,
+    alignSelf: 'center',
+    paddingTop: 20,
+    paddingHorizontal: 25,
+    justifyContent: 'center',
+    alignItems: 'center',
+},
 });
