@@ -1,40 +1,16 @@
 import { FontAwesome6, MaterialIcons } from '@expo/vector-icons';
-import { Link, useRouter } from 'expo-router';
-import React, { useEffect, useState } from 'react';
+import { Link } from 'expo-router';
+import React from 'react';
 import { ActivityIndicator, Image, ScrollView, Text, TouchableOpacity, useWindowDimensions, View } from 'react-native';
 import Carousel from 'react-native-reanimated-carousel';
 import Header from '../components/header';
 import styles from '../constants/stylehome';
 import { Colors } from '../constants/theme';
-import { Book, getLatestBooks } from '../service/bookService';
+import { useHomeBooks } from './controllers/bookDisplayController';
 
 export default function Home() {
   const { width } = useWindowDimensions();
-  const router = useRouter();
-  const [latestBooks, setLatestBooks] = useState<Book[]>([]);
-  const [loadingBooks, setLoadingBooks] = useState(true);
-
-  useEffect(() => {
-    const fetchLatestBooks = async () => {
-      try {
-        const data = await getLatestBooks(6);
-        setLatestBooks(data);
-      } catch (error) {
-        console.error("Error fetching latest books:", error);
-      } finally {
-        setLoadingBooks(false);
-      }
-    };
-
-    fetchLatestBooks();
-  }, []);
-
-  const carouselImg = [
-    { id: '1', uri: 'https://firebasestorage.googleapis.com/v0/b/amh26-d3e52.firebasestorage.app/o/img%2Fcrimen%20y%20castigo.jpg?alt=media&token=930e4fbd-ec35-478f-ad6b-9dfb96745098' },
-    { id: '2', uri: 'https://firebasestorage.googleapis.com/v0/b/amh26-d3e52.firebasestorage.app/o/img%2Ffahrenheit.jpg?alt=media&token=74737e5e-b0dc-47dd-ad6a-0397cee78995' },
-    { id: '3', uri: 'https://firebasestorage.googleapis.com/v0/b/amh26-d3e52.firebasestorage.app/o/img%2Fladymasacre.jpg?alt=media&token=11d5b34e-3c65-41b5-a909-0e70eaf6c0ca' },
-    { id: '4', uri: 'https://firebasestorage.googleapis.com/v0/b/amh26-d3e52.firebasestorage.app/o/img%2Fmuerte%20en%20el%20nilo.jpg?alt=media&token=0b42a787-3a4c-41e0-bd66-ca84e88f2da8' },
-  ];
+  const { latestBooks, loadingBooks, carouselImg } = useHomeBooks();
 
   return (
     <ScrollView style={styles.contentContainer} contentContainerStyle={styles.container}>

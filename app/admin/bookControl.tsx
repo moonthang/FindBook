@@ -1,49 +1,15 @@
 import { MaterialIcons } from '@expo/vector-icons';
 import { router } from 'expo-router';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { ActivityIndicator, FlatList, Image, StatusBar, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import Header from '../../components/header';
 import styles from '../../constants/styleAdmin';
 import { Colors } from '../../constants/theme';
-import { Book, deleteBook, subscribeToBooks } from '../../service/bookService';
+import { Book } from '../../service/bookService';
+import { useBookControl } from '../controllers/bookController';
 
 export default function BookInventory() {
-    
-    const [books, setBooks] = useState<Book[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [searchQuery, setSearchQuery] = useState('');
-    const [refreshing, setRefreshing] = useState(false);
-
-    useEffect(() => {
-        const unsubscribe = subscribeToBooks(
-            (booksData) => {
-                setBooks(booksData);
-                setLoading(false);
-                setRefreshing(false);
-            },
-            (error) => {
-                console.error("Error fetching books:", error);
-                window.alert('Error: No se pudieron cargar los libros');
-                setLoading(false);
-            }
-        );
-        return () => unsubscribe();
-    }, []);
-
-    const handleDelete = async (book: Book) => {
-        if (window.confirm(`¿Estás seguro de que deseas eliminar "${book.title}"?`)) {
-            try {
-                await deleteBook(book.uid);
-            } catch (error) {
-                window.alert('Error: No se pudo eliminar el libro');
-            }
-        }
-    };
-
-    const filteredBooks = books.filter(book =>
-        book.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        book.author.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+    const { loading, searchQuery, setSearchQuery, refreshing, setRefreshing, handleDelete, filteredBooks } = useBookControl();
 
     const renderBookItem = ({ item: book }: { item: Book }) => {
         return (

@@ -1,10 +1,10 @@
 import Header from '@/components/header';
 import { Feather } from '@expo/vector-icons';
-import { Link, useRouter } from 'expo-router';
-import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, Alert, Image, KeyboardTypeOptions, ScrollView, StatusBar, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Link } from 'expo-router';
+import React from 'react';
+import { ActivityIndicator, Image, KeyboardTypeOptions, ScrollView, StatusBar, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import styles from '../../constants/styleUsers';
-import { deleteCurrentUserAccount, getCurrentUser, getUserData, logoutUser, updateUserData, UserData } from '../../service/authService';
+import { useProfile } from '../controllers/userProfileController';
 
 interface ProfileFieldProps {
     label: string;
@@ -30,123 +30,11 @@ const ProfileField = ({ label, value, isEditing, onChangeText, editable = false,
 );
 
 export default function UserProfile() {
-    const router = useRouter();
-    const [user, setUser] = useState<UserData | null>(null);
-    const [loading, setLoading] = useState(true);
-    const [isEditing, setIsEditing] = useState(false);
-    const [editedName, setEditedName] = useState('');
-    const [editedBirthDate, setEditedBirthDate] = useState('');
-
-    useEffect(() => {
-        fetchUserData();
-    }, []);
-
-    const fetchUserData = async () => {
-        try {
-            const currentUser = getCurrentUser();
-            if (currentUser) {
-                const data = await getUserData(currentUser.uid);
-                if (data) {
-                    setUser(data);
-                    setEditedName(data.displayName);
-                    setEditedBirthDate(data.birthDate || '');
-                }
-            }
-        } catch (error) {
-            Alert.alert('Error', 'No se pudieron cargar los datos del perfil.');
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    const handleDateChange = (text: string) => {
-        const cleaned = text.replace(/[^\d]/g, '');
-        const { length } = cleaned;
-
-        if (length <= 2) {
-            setEditedBirthDate(cleaned);
-        } else if (length <= 4) {
-            setEditedBirthDate(`${cleaned.slice(0, 2)}-${cleaned.slice(2)}`);
-        } else {
-            setEditedBirthDate(`${cleaned.slice(0, 2)}-${cleaned.slice(2, 4)}-${cleaned.slice(4, 8)}`);
-        }
-    };
-
-    const handleUpdate = async () => {
-        if (!user || !editedName.trim()) return;
-
-        if (editedBirthDate) {
-            const dateRegex = /^\d{2}-\d{2}-\d{4}$/;
-            if (!dateRegex.test(editedBirthDate)) {
-                Alert.alert('Error', 'Formato de fecha incorrecto. Use: DD-MM-AAAA');
-                return;
-            }
-        }
-
-        try {
-            setLoading(true);
-            await updateUserData(user.uid, {
-                displayName: editedName,
-                birthDate: editedBirthDate
-            });
-
-            setUser({ ...user, displayName: editedName, birthDate: editedBirthDate });
-            setIsEditing(false);
-            Alert.alert('Éxito', 'Perfil actualizado correctamente.');
-        } catch (error) {
-            Alert.alert('Error', 'No se pudo actualizar el perfil.');
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    const handleLogout = async () => {
-        try {
-            await logoutUser();
-            router.replace('/auth/login');
-        } catch (error) {
-            Alert.alert('Error', 'No se pudo cerrar sesión.');
-        }
-    };
-
-    const handleDeleteAccount = () => {
-        Alert.alert(
-            'Eliminar Cuenta',
-            '¿Estás seguro de que deseas eliminar tu cuenta permanentemente? Esta acción no se puede deshacer.',
-            [
-                { text: 'Cancelar', style: 'cancel' },
-                {
-                    text: 'Eliminar',
-                    style: 'destructive',
-                    onPress: async () => {
-                        try {
-                            setLoading(true);
-                            await deleteCurrentUserAccount();
-                            router.replace('/');
-                        } catch (error: any) {
-                            if (error.code === 'auth/requires-recent-login') {
-                                Alert.alert('Seguridad', 'Para eliminar tu cuenta, debes cerrar sesión e iniciarla nuevamente por seguridad.');
-                            } else {
-                                Alert.alert('Error', 'No se pudo eliminar la cuenta.');
-                            }
-                        } finally {
-                            setLoading(false);
-                        }
-                    }
-                }
-            ]
-        );
-    };
-
-    const getInitials = (name: string) => {
-        return name.split(' ').map((n) => n[0]).join('').substring(0, 2).toUpperCase();
-    };
-
-    const formatDate = (dateString?: string) => {
-        if (!dateString) return '';
-        const date = new Date(dateString);
-        return date.toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
-    };
+    const {
+        user, loading, isEditing, setIsEditing, editedName, setEditedName,
+        editedBirthDate, handleDateChange, handleUpdate, handleLogout,
+        handleDeleteAccount, getInitials, formatDate, cancelEditing
+    } = useProfile();
 
     if (loading && !user) {
         return (
@@ -200,11 +88,7 @@ export default function UserProfile() {
                         )}
 
                         {isEditing && (
-                            <TouchableOpacity style={styles.btnDelete} activeOpacity={0.7} onPress={() => {
-                                setIsEditing(false);
-                                setEditedName(user?.displayName || '');
-                                setEditedBirthDate(user?.birthDate || '');
-                            }}>
+                            <TouchableOpacity style={styles.btnDelete} activeOpacity={0.7} onPress={cancelEditing}>
                                 <Text style={styles.btnDeleteTxt}>Cancelar</Text>
                             </TouchableOpacity>
                         )}

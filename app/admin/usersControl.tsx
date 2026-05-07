@@ -1,64 +1,22 @@
 import { MaterialIcons } from '@expo/vector-icons';
 import { Link, useFocusEffect } from 'expo-router';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback } from 'react';
 import { ActivityIndicator, Alert, ScrollView, StatusBar, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import Header from '../../components/header';
 import styles from '../../constants/styleAdmin';
 import { Colors } from '../../constants/theme';
-import { deleteUserData, getAllUsers, UserData } from '../../service/authService';
+import { useUsersControl } from '../controllers/userController';
 
 export default function UsersControl() {
-    const [users, setUsers] = useState<UserData[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [searchQuery, setSearchQuery] = useState('');
-    const [refreshing, setRefreshing] = useState(false);
-
-    const fetchUsers = async () => {
-        try {
-            const data = await getAllUsers();
-            setUsers(data);
-        } catch (error: any) {
-            console.error("Fetch users error:", error);
-            Alert.alert('Error', `No se pudieron cargar los usuarios: ${error.message}`);
-        } finally {
-            setLoading(false);
-            setRefreshing(false);
-        }
-    };
+    const {
+        users, loading, searchQuery, setSearchQuery,
+        fetchUsers, handleDelete, getInitials, filteredUsers
+    } = useUsersControl();
 
     useFocusEffect(
         useCallback(() => {
             fetchUsers();
         }, [])
-    );
-
-    const handleDelete = (uid: string) => {
-        Alert.alert(
-            'Eliminar Usuario',
-            '¿Estás seguro de que deseas eliminar este usuario? Esta acción borrará sus datos de la base de datos.',
-            [
-                { text: 'Cancelar', style: 'cancel' },
-                {
-                    text: 'Eliminar', style: 'destructive', onPress: async () => {
-                        try {
-                            await deleteUserData(uid);
-                            setUsers(prev => prev.filter(u => u.uid !== uid));
-                        } catch (error) {
-                            Alert.alert('Error', 'No se pudo eliminar el usuario.');
-                        }
-                    }
-                }
-            ]
-        );
-    };
-
-    const getInitials = (name: string) => {
-        return name.split(' ').map((n) => n[0]).join('').substring(0, 2).toUpperCase();
-    };
-
-    const filteredUsers = users.filter(user =>
-        user.displayName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (user.email && user.email.toLowerCase().includes(searchQuery.toLowerCase()))
     );
 
     return (

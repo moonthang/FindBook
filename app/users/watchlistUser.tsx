@@ -2,60 +2,18 @@ import Header from '@/components/header';
 import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Link } from 'expo-router';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { ActivityIndicator, Image, ScrollView, StatusBar, Text, TextInput, TouchableOpacity, useWindowDimensions, View } from 'react-native';
 import styleSwipe from '../../constants/styleSwipe';
 import styles from '../../constants/styleUsers';
 import stylesWL from '../../constants/styleWatchList';
 import { Colors } from '../../constants/theme';
-import { useAuth } from '../../context/authContext';
-import { removeFromWatchlist } from '../../service/authService';
-import { Book, getBooksByIds } from '../../service/bookService';
+import { useWatchlist } from '../controllers/userProfileController';
 
 export default function WatchlistUser() {
   const { width } = useWindowDimensions();
-  const { userData, user } = useAuth();
-  const [booksList, setBooksList] = useState<Book[]>([]);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchWatchlist = async () => {
-      if (!userData?.watchlist || !Array.isArray(userData.watchlist) || userData.watchlist.length === 0) {
-        setBooksList([]);
-        setLoading(false);
-        return; 
-      }
-
-      setLoading(true);
-      try {
-        const data = await getBooksByIds(userData.watchlist);
-        setBooksList(data);
-      } catch (error) {
-        console.error("Error fetching watchlist:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchWatchlist();
-  }, [userData?.watchlist]);
-
-  const filteredBooks = booksList.filter(book => 
-    book.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    book.author.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
-  const handleRemove = async (bookUid: string) => {
-    if (!user) return;
-    try {
-      await removeFromWatchlist(user.uid, bookUid);
-      setBooksList(prev => prev.filter(b => b.uid !== bookUid));
-    } catch (error) {
-      console.error("Error removing book:", error);
-    }     
-  };
-
+  const { searchQuery, setSearchQuery, loading, filteredBooks, handleRemove } = useWatchlist();
+ 
   return (
     <ScrollView style={styles.contentContainer}>
       <Header />

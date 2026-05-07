@@ -1,101 +1,16 @@
 import Header from '@/components/header';
 import { AntDesign, Entypo, FontAwesome, FontAwesome5, FontAwesome6, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
-import React, { useState } from 'react';
-import { ActivityIndicator, Alert, ScrollView, StatusBar, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import React from 'react';
+import { ActivityIndicator, ScrollView, StatusBar, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import styles from '../../constants/styleAdmin';
-import { createUserByAdmin } from '../../service/authService';
-
-type UserRole = 'admin' | 'user';
+import { useUserForm } from '../controllers/userController';
 
 export default function Createusers() {
-    const router = useRouter();
-    const [fullName, setFullName] = useState('');
-    const [email, setEmail] = useState('');
-    const [dateOfBirth, setDateOfBirth] = useState('');
-    const [role, setRole] = useState<UserRole>('user');
-    const [password, setPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
-    const [loading, setLoading] = useState(false);
-    const [showRoleDropdown, setShowRoleDropdown] = useState(false);
-
-    const roles: { value: UserRole; label: string }[] = [
-        { value: 'admin', label: 'Administrador' },
-        { value: 'user', label: 'Usuario Estándar' },
-    ];
-
-    const validateForm = (): boolean => {
-        if (!fullName.trim()) {
-            Alert.alert('Error', 'El nombre completo es requerido');
-            return false;
-        }
-        if (!email.trim() || !email.includes('@')) {
-            Alert.alert('Error', 'Ingresa un correo electrónico válido');
-            return false;
-        }
-        if (!password || password.length < 6) {
-            Alert.alert('Error', 'La contraseña debe tener al menos 6 caracteres');
-            return false;
-        }
-        if (password !== confirmPassword) {
-            Alert.alert('Error', 'Las contraseñas no coinciden');
-            return false;
-        }
-        return true;
-    };
-
-    const handleCreateUser = async () => {
-        if (!validateForm()) return;
-
-        setLoading(true);
-        try {
-            await createUserByAdmin(email, password, fullName, role);
-
-            Alert.alert(
-                'Éxito',
-                `Usuario ${fullName} creado correctamente con rol de ${roles.find(r => r.value === role)?.label}`,
-                [{ text: 'OK', onPress: () => {
-                    resetForm();
-                    router.push('/admin/usersControl');
-                }}]
-            );
-        } catch (error: any) {
-            console.error('Error creando usuario:', error);
-
-            let errorMessage = 'Error al crear el usuario';
-            if (error.code === 'auth/email-already-in-use') {
-                errorMessage = 'Este correo electrónico ya está registrado';
-            } else if (error.code === 'auth/invalid-email') {
-                errorMessage = 'Correo electrónico inválido';
-            } else if (error.code === 'auth/weak-password') {
-                errorMessage = 'La contraseña es demasiado débil';
-            } else if (error.code === 'permission-denied') {
-                errorMessage = 'No tienes permisos para crear usuarios. Solo los administradores pueden hacer esto.';
-            }
-
-            Alert.alert('Error', errorMessage);
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    const resetForm = () => {
-        setFullName('');
-        setEmail('');
-        setDateOfBirth('');
-        setRole('user');
-        setPassword('');
-        setConfirmPassword('');
-    };
-
-    const handleCancel = () => {
-        resetForm();
-    };
-
-    const selectRole = (selectedRole: UserRole) => {
-        setRole(selectedRole);
-        setShowRoleDropdown(false);
-    };
+    const {
+        fullName, setFullName, email, setEmail, dateOfBirth, setDateOfBirth,
+        role, password, setPassword, confirmPassword, setConfirmPassword,
+        loading, showRoleDropdown, setShowRoleDropdown, roles, handleCreateUser, handleCancel, selectRole
+    } = useUserForm();
 
     return (
         <ScrollView style={styles.contentContainer}>

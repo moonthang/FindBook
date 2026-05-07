@@ -1,23 +1,12 @@
 import { Ionicons } from '@expo/vector-icons';
-import { Link, router } from 'expo-router';
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import React, { useState } from 'react';
-import { Alert, Image, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Link } from 'expo-router';
+import React from 'react';
+import { ActivityIndicator, Image, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { styles } from '../../constants/styleAuth';
-import { auth } from '../../firebaseConfig';
+import { useLogin } from '../controllers/authController';
 
 export default function Login() {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-
-    const handleLogin = async () => {
-        try {
-            await signInWithEmailAndPassword(auth, email, password);
-            router.replace('/');
-        } catch (error: any) {
-            Alert.alert('Error', 'Correo o contraseña incorrectos');
-        }
-    };
+    const { email, setEmail, password, setPassword, loading, handleLogin } = useLogin();
 
     return (
         <ScrollView style={styles.contentContainer} contentContainerStyle={styles.container}>
@@ -51,8 +40,12 @@ export default function Login() {
                         <View style={styles.passwordContainer}>
                             <TextInput style={[styles.input, { flex: 1, borderWidth: 0 }]} placeholder="Ingrese su contraseña" placeholderTextColor={'gray'} value={password} onChangeText={setPassword} secureTextEntry />
                         </View>
-                        <TouchableOpacity style={styles.btnLogin} activeOpacity={0.8} onPress={handleLogin}>
-                            <Text style={styles.btnLoginTxt}>Iniciar Sesión</Text>
+                        <TouchableOpacity style={[styles.btnLogin, loading && { opacity: 0.8 }]} activeOpacity={0.8} onPress={handleLogin} disabled={loading}>
+                            {loading ? (
+                                <ActivityIndicator color="#fff" />
+                            ) : (
+                                <Text style={styles.btnLoginTxt}>Iniciar Sesión</Text>
+                            )}
                         </TouchableOpacity>
                     </View>
 

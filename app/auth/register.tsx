@@ -1,80 +1,16 @@
 import { Ionicons } from '@expo/vector-icons';
-import { Link, useRouter } from 'expo-router';
-import React, { useState } from 'react';
-import { ActivityIndicator, Alert, Image, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Link } from 'expo-router';
+import React from 'react';
+import { ActivityIndicator, Image, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { styles } from '../../constants/styleAuth';
-import { registerUser } from '../../service/authService';
+import { useRegister } from '../controllers/authController';
 
 export default function Register() {
-    const router = useRouter();
-    const [name, setName] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
-    const [birthDate, setBirthDate] = useState('');
-    const [loading, setLoading] = useState(false);
-
-    const handleDateChange = (text: string) => {
-        const cleaned = text.replace(/[^\d]/g, '');
-        const { length } = cleaned;
-
-        if (length <= 2) {
-            setBirthDate(cleaned);
-        } else if (length <= 4) {
-            setBirthDate(`${cleaned.slice(0, 2)}-${cleaned.slice(2)}`);
-        } else {
-            setBirthDate(`${cleaned.slice(0, 2)}-${cleaned.slice(2, 4)}-${cleaned.slice(4, 8)}`);
-        }
-    };
-
-    const handleRegister = async () => {
-        if (!name || !email || !password || !confirmPassword || !birthDate) {
-            Alert.alert('Error', 'Por favor, complete todos los campos.');
-            return;
-        }
-
-        if (password !== confirmPassword) {
-            Alert.alert('Error', 'Las contraseñas no coinciden.');
-            return;
-        }
-
-        const dateRegex = /^\d{2}-\d{2}-\d{4}$/;
-        if (!dateRegex.test(birthDate)) {
-            Alert.alert('Error', 'Formato de fecha incorrecto. Use guiones: DD-MM-AAAA (Ej: 25-12-1995)');
-            return;
-        }
-
-        setLoading(true);
-
-        try {
-            await registerUser(email, password, name, birthDate);
-            Alert.alert(
-                '¡Éxito!',
-                'Cuenta creada correctamente',
-                [{ text: 'OK', onPress: () => router.replace('/auth/login') }]
-            );
-        } catch (error: any) {
-            console.error('Error en el registro:', error);
-            let errorMessage = 'Error al crear la cuenta';
-
-            if (error.code) {
-                switch (error.code) {
-                    case 'auth/email-already-in-use':
-                        errorMessage = 'Este correo ya está registrado.';
-                        break;
-                    case 'auth/invalid-email':
-                        errorMessage = 'El formato del correo electrónico es inválido.';
-                        break;
-                    case 'auth/weak-password':
-                        errorMessage = 'La contraseña debe tener al menos 6 caracteres.';
-                        break;
-                }
-            }
-            Alert.alert('Error de registro', errorMessage);
-        } finally {
-            setLoading(false);
-        }
-    };
+    const {
+        name, setName, email, setEmail, password, setPassword,
+        confirmPassword, setConfirmPassword, birthDate,
+        loading, handleDateChange, handleRegister
+    } = useRegister();
 
     return (
         <ScrollView style={styles.contentContainer} contentContainerStyle={styles.container}>
