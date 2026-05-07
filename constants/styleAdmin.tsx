@@ -7,16 +7,23 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.light.background,
     },
     container: {
-        paddingBottom: 40,
-    },
+    flexGrow: 1,
+    alignItems: 'center',
+    paddingBottom: 40,
+},
     content: {
-        flex: 1,
-        paddingTop: 24,
-        paddingHorizontal: 24,
-    },
+    width: '100%',
+    maxWidth: 1000,
+    alignSelf: 'center',
+    paddingTop: 24,
+    paddingHorizontal: 24,
+},
     searchSection: {
-        marginBottom: 40,
-    },
+    width: '100%',
+    maxWidth: 1000,
+    alignSelf: 'center',
+    marginBottom: 40,
+},
     searchContainer: {
         flexDirection: 'row',
         alignItems: 'center',
@@ -36,11 +43,14 @@ const styles = StyleSheet.create({
         marginRight: 12,
     },
     listHeader: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'flex-end',
-        marginBottom: 24,
-    },
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-end',
+    marginBottom: 24,
+    flexWrap: 'wrap',
+    gap: 16,
+},
     listTitle: {
         fontSize: 28,
         fontWeight: '900',
@@ -66,18 +76,22 @@ const styles = StyleSheet.create({
         borderRadius: 8,
     },
     listContainer: {
-        gap: 16,
-    },
+    width: '100%',
+    maxWidth: 1000,
+    alignSelf: 'center',
+    gap: 16,
+},
     rowCard: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        backgroundColor: 'white',
-        padding: 16,
-        marginBottom: 8,
-        borderRadius: 16,
-        borderWidth: 1,
-        borderColor: '#ee6c2b1a',
-    },
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'white',
+    padding: 16,
+    marginBottom: 8,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: '#ee6c2b1a',
+},
     rowMainSection: {
         flex: 2,
         flexDirection: 'row',
@@ -156,11 +170,11 @@ const styles = StyleSheet.create({
         backgroundColor: '#fef2f2',
         borderRadius: 8,
     },
-    fabContainer: {
-        position: 'absolute',
-        bottom: 30,
-        right: 24,
-    },
+   fabContainer: {
+    position: 'absolute',
+    bottom: 30,
+    right: 24,
+},
     fab: {
         flexDirection: 'row',
         alignItems: 'center',
@@ -186,12 +200,15 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     card: {
-        backgroundColor: 'white',
-        borderRadius: 24,
-        padding: 24,
-        borderWidth: 1,
-        borderColor: Colors.light.borderColor,
-    },
+    width: '100%',
+    maxWidth: 900,
+    alignSelf: 'center',
+    backgroundColor: 'white',
+    borderRadius: 24,
+    padding: 24,
+    borderWidth: 1,
+    borderColor: Colors.light.borderColor,
+},
     form: {
         gap: 24,
         flexDirection: 'column',
@@ -254,51 +271,83 @@ const styles = StyleSheet.create({
         lineHeight: 20,
         marginTop: 4,
     },
-    btnRow: {
-        flexDirection: 'column',
-        gap: 12,
-        marginTop: 8,
-    },
-    btnPrimary: {
-        flexDirection: 'row',
-        height: 56,
-        backgroundColor: Colors.light.colorPrimary,
-        borderRadius: 12,
-        justifyContent: 'center',
-        alignItems: 'center',
-        gap: 8,
-    },
-    btnTxtPrimary: {
-        color: 'white',
-        fontSize: 15,
-        fontWeight: '700',
-    },
-    btnSecondary: {
-        height: 56,
-        backgroundColor: 'gray',
-        borderRadius: 12,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    btnTxtSecondary: {
-        color: 'white',
-        fontSize: 15,
-        fontWeight: '700',
-    },
+  btnRow: {
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+
+    gap: 18,
+
+    marginTop: 24,
+    marginBottom: 40,
+},
+
+btnPrimary: {
+    backgroundColor: Colors.light.colorPrimary,
+
+    width: '100%',
+    maxWidth: 480,
+
+    height: 60,
+
+    borderRadius: 18,
+
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+
+    gap: 12,
+
+    alignSelf: 'center',
+},
+
+btnTxtPrimary: {
+    color: 'white',
+    fontSize: 18,
+    fontWeight: '700',
+},
+
+btnSecondary: {
+    backgroundColor: '#808080',
+
+    width: '100%',
+    maxWidth: 480,
+
+    height: 60,
+
+    borderRadius: 18,
+
+    justifyContent: 'center',
+    alignItems: 'center',
+
+    alignSelf: 'center',
+},
+
+btnTxtSecondary: {
+    color: 'white',
+    fontSize: 18,
+    fontWeight: '700',
+},
     infoCardsContainer: {
-        flexDirection: 'row',
-        gap: 16,
-        marginTop: 32,
-    },
+    width: '100%',
+    maxWidth: 900,
+    alignSelf: 'center',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    gap: 16,
+    marginTop: 32,
+},
     infoCard: {
-        flex: 1,
-        backgroundColor: 'white',
-        padding: 20,
-        alignItems: 'center',
-        borderRadius: 20,
-        borderWidth: 1,
-        borderColor: Colors.light.borderColor,
-    },
+    width: '100%',
+    maxWidth: 280,
+    backgroundColor: 'white',
+    padding: 20,
+    alignItems: 'center',
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: Colors.light.borderColor,
+},
     infoCardIcon: {
         width: 48,
         height: 48,
