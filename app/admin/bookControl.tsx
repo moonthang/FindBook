@@ -12,6 +12,7 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+  useWindowDimensions,
   View,
 } from 'react-native';
 
@@ -26,12 +27,13 @@ import {
 
 export default function BookInventory() {
   const router = useRouter();
+  const { width } = useWindowDimensions();
+  const isMobile = width < 700;
 
   const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [refreshing, setRefreshing] = useState(false);
-
   const [expanded, setExpanded] = useState(false);
 
   const animatedWidth = useRef(new Animated.Value(64)).current;
@@ -45,12 +47,7 @@ export default function BookInventory() {
       },
       (error) => {
         console.error('Error fetching books:', error);
-
-        Alert.alert(
-          'Error',
-          'No se pudieron cargar los libros'
-        );
-
+        Alert.alert('Error', 'No se pudieron cargar los libros');
         setLoading(false);
         setRefreshing(false);
       }
@@ -84,21 +81,15 @@ export default function BookInventory() {
       'Eliminar Libro',
       `¿Estás seguro de que deseas eliminar "${book.title}"?`,
       [
-        {
-          text: 'Cancelar',
-          style: 'cancel',
-        },
+        { text: 'Cancelar', style: 'cancel' },
         {
           text: 'Eliminar',
           style: 'destructive',
           onPress: async () => {
             try {
               await deleteBook(book.uid);
-            } catch (error) {
-              Alert.alert(
-                'Error',
-                'No se pudo eliminar el libro'
-              );
+            } catch {
+              Alert.alert('Error', 'No se pudo eliminar el libro');
             }
           },
         },
@@ -108,21 +99,29 @@ export default function BookInventory() {
 
   const filteredBooks = books.filter(
     (book) =>
-      book.title
-        .toLowerCase()
-        .includes(searchQuery.toLowerCase()) ||
-      book.author
-        .toLowerCase()
-        .includes(searchQuery.toLowerCase())
+      book.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      book.author.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const renderBookItem = ({
-    item: book,
-  }: {
-    item: Book;
-  }) => (
-    <View style={styles.rowCard}>
-      <View style={styles.rowMainSection}>
+  const renderBookItem = ({ item: book }: { item: Book }) => (
+    <View
+      style={[
+        styles.rowCard,
+        isMobile && {
+          flexDirection: 'column',
+          alignItems: 'flex-start',
+          gap: 14,
+        },
+      ]}
+    >
+      <View
+        style={[
+          styles.rowMainSection,
+          isMobile && {
+            width: '100%',
+          },
+        ]}
+      >
         <View style={styles.coverContainer}>
           <Image
             source={{ uri: book.coverUrl }}
@@ -132,10 +131,7 @@ export default function BookInventory() {
         </View>
 
         <View style={styles.itemInfo}>
-          <Text
-            style={styles.rowTitle}
-            numberOfLines={2}
-          >
+          <Text style={styles.rowTitle} numberOfLines={2}>
             {book.title}
           </Text>
 
@@ -145,51 +141,61 @@ export default function BookInventory() {
         </View>
       </View>
 
-      <Text style={styles.txtAuthor}>
-        {book.author}
-      </Text>
-
-      <View style={styles.ratingContainer}>
-        <MaterialIcons
-          name="star"
-          size={18}
-          color={Colors.light.colorPrimary}
-        />
-
-        <Text style={styles.txtRating}>
-          {parseFloat(book.rating).toFixed(1)}
+      <View
+        style={{
+          width: '100%',
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          gap: 12,
+        }}
+      >
+        <Text
+          style={[
+            styles.txtAuthor,
+            {
+              flex: 1,
+            },
+          ]}
+          numberOfLines={2}
+        >
+          {book.author}
         </Text>
-      </View>
 
-      <View style={styles.rowActions}>
-        <TouchableOpacity
-          style={styles.btnAction}
-          onPress={() =>
-            router.push({
-              pathname: '/admin/bookFrom',
-              params: {
-                bookId: book.uid,
-              },
-            })
-          }
-        >
+        <View style={styles.ratingContainer}>
           <MaterialIcons
-            name="edit"
-            size={22}
-            color="#64748b"
+            name="star"
+            size={18}
+            color={Colors.light.colorPrimary}
           />
-        </TouchableOpacity>
 
-        <TouchableOpacity
-          style={styles.btnDelete}
-          onPress={() => handleDelete(book)}
-        >
-          <MaterialIcons
-            name="delete-outline"
-            size={22}
-            color="#ef4444"
-          />
-        </TouchableOpacity>
+          <Text style={styles.txtRating}>
+            {parseFloat(book.rating).toFixed(1)}
+          </Text>
+        </View>
+
+        <View style={styles.rowActions}>
+          <TouchableOpacity
+            style={styles.btnAction}
+            onPress={() =>
+              router.push({
+                pathname: '/admin/bookFrom',
+                params: {
+                  bookId: book.uid,
+                },
+              })
+            }
+          >
+            <MaterialIcons name="edit" size={22} color="#64748b" />
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.btnDelete}
+            onPress={() => handleDelete(book)}
+          >
+            <MaterialIcons name="delete-outline" size={22} color="#ef4444" />
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   );
@@ -198,11 +204,7 @@ export default function BookInventory() {
     <>
       <View style={styles.searchSection}>
         <View style={styles.searchContainer}>
-          <MaterialIcons
-            name="search"
-            size={24}
-            color="#F37032"
-          />
+          <MaterialIcons name="search" size={24} color="#F37032" />
 
           <TextInput
             style={styles.searchInput}
@@ -215,33 +217,30 @@ export default function BookInventory() {
       </View>
 
       <View style={styles.tableHeader}>
-        <Text
-          style={[
-            styles.headerCell,
-            { flex: 2 },
-          ]}
-        >
-          LIBRO
-        </Text>
-
-        <Text style={styles.headerCell}>
-          AUTOR
-        </Text>
-
-        <Text style={styles.headerCell}>
-          RATING
-        </Text>
-
-        <Text
-          style={[
-            styles.headerCell,
-            { textAlign: 'right' },
-          ]}
-        >
+        <Text style={[styles.headerCell, { flex: 2 }]}>LIBRO</Text>
+        <Text style={styles.headerCell}>AUTOR</Text>
+        <Text style={styles.headerCell}>RATING</Text>
+        <Text style={[styles.headerCell, { textAlign: 'right' }]}>
           ACCIONES
         </Text>
       </View>
     </>
+  );
+
+  const renderMobileHeader = () => (
+    <View style={styles.searchSection}>
+      <View style={styles.searchContainer}>
+        <MaterialIcons name="search" size={24} color="#F37032" />
+
+        <TextInput
+          style={styles.searchInput}
+          placeholder="Buscar libros por título o autor..."
+          placeholderTextColor="#94a3b8"
+          value={searchQuery}
+          onChangeText={setSearchQuery}
+        />
+      </View>
+    </View>
   );
 
   return (
@@ -253,15 +252,7 @@ export default function BookInventory() {
         backgroundColor="#f8f6f6"
       />
 
-      <View
-        style={[
-          styles.content,
-          {
-            flex: 1,
-            width: '100%',
-          },
-        ]}
-      >
+      <View style={[styles.content, { flex: 1, width: '100%' }]}>
         {loading ? (
           <ActivityIndicator
             size="large"
@@ -273,7 +264,7 @@ export default function BookInventory() {
             data={filteredBooks}
             keyExtractor={(item) => item.uid}
             renderItem={renderBookItem}
-            ListHeaderComponent={renderHeader}
+            ListHeaderComponent={isMobile ? renderMobileHeader : renderHeader}
             contentContainerStyle={[
               styles.listContent,
               {
@@ -284,7 +275,6 @@ export default function BookInventory() {
             refreshing={refreshing}
             onRefresh={() => {
               setRefreshing(true);
-
               setRefreshing(false);
             }}
             ListEmptyComponent={
@@ -317,8 +307,7 @@ export default function BookInventory() {
           style={{
             width: animatedWidth,
             height: 64,
-            backgroundColor:
-              Colors.light.colorPrimary,
+            backgroundColor: Colors.light.colorPrimary,
             borderRadius: 32,
             overflow: 'hidden',
             justifyContent: 'center',
@@ -334,17 +323,12 @@ export default function BookInventory() {
                 justifyContent: 'center',
               }}
             >
-              <MaterialIcons
-                name="book"
-                size={28}
-                color="white"
-              />
+              <MaterialIcons name="book" size={28} color="white" />
             </Pressable>
           ) : (
             <Pressable
               onPress={() => {
                 closeFab();
-
                 router.push('/admin/bookFrom');
               }}
               style={{
@@ -356,11 +340,7 @@ export default function BookInventory() {
                 paddingHorizontal: 18,
               }}
             >
-              <MaterialIcons
-                name="book"
-                size={28}
-                color="white"
-              />
+              <MaterialIcons name="book" size={28} color="white" />
 
               <Text
                 style={{
