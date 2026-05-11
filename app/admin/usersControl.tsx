@@ -1,7 +1,6 @@
 import { MaterialIcons } from '@expo/vector-icons';
 import { Link, useFocusEffect } from 'expo-router';
 import React, { useCallback, useRef, useState } from 'react';
-
 import {
   ActivityIndicator,
   Animated,
@@ -36,10 +35,7 @@ export default function UsersControl() {
   const isMobile = width < 700;
 
   const [expanded, setExpanded] = useState(false);
-
-  const animatedWidth = useRef(
-    new Animated.Value(64)
-  ).current;
+  const animatedWidth = useRef(new Animated.Value(64)).current;
 
   useFocusEffect(
     useCallback(() => {
@@ -60,21 +56,11 @@ export default function UsersControl() {
   return (
     <View style={styles.contentContainer}>
       <Header />
-
-      <StatusBar
-        barStyle="dark-content"
-        backgroundColor="#f8f6f6"
-      />
+      <StatusBar barStyle="dark-content" backgroundColor="#f8f6f6" />
 
       <ScrollView
         style={{ flex: 1, width: '100%' }}
-        contentContainerStyle={[
-          styles.container,
-          styles.content,
-          {
-            paddingBottom: 120,
-          },
-        ]}
+        contentContainerStyle={[styles.container, styles.content, { paddingBottom: 120 }]}
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.searchSection}>
@@ -116,10 +102,7 @@ export default function UsersControl() {
                 },
               ]}
             >
-              Registrado{' '}
-              <Text style={styles.listTitleHighlight}>
-                Usuarios
-              </Text>
+              Registrado <Text style={styles.listTitleHighlight}>Usuarios</Text>
             </Text>
 
             <Text style={styles.listSubtitle}>
@@ -128,9 +111,7 @@ export default function UsersControl() {
           </View>
 
           <View style={styles.actionsContainer}>
-            <TouchableOpacity
-              style={styles.btnAction}
-            >
+            <TouchableOpacity style={styles.btnAction}>
               <MaterialIcons
                 name="filter-list"
                 size={20}
@@ -138,9 +119,7 @@ export default function UsersControl() {
               />
             </TouchableOpacity>
 
-            <TouchableOpacity
-              style={styles.btnAction}
-            >
+            <TouchableOpacity style={styles.btnAction}>
               <MaterialIcons
                 name="sort-by-alpha"
                 size={20}
@@ -181,57 +160,43 @@ export default function UsersControl() {
                 >
                   <View style={styles.avatar}>
                     <Text style={styles.txtAvatar}>
-                      {getInitials(
-                        user.displayName
-                      )}
+                      {getInitials(user.displayName)}
                     </Text>
                   </View>
 
-                  <View
-                    style={[
-                      styles.itemInfo,
-                      {
-                        flex: 1,
-                      },
-                    ]}
-                  >
-                    <Text
-                      style={styles.rowTitle}
-                      numberOfLines={2}
-                    >
+                  <View style={[styles.itemInfo, { flex: 1 }]}>
+                    <Text style={styles.rowTitle} numberOfLines={2}>
                       {user.displayName}
                     </Text>
 
-                    <Text
-                      style={styles.rowSubtitle}
-                      numberOfLines={2}
-                    >
+                    <Text style={styles.rowSubtitle} numberOfLines={2}>
                       {user.email}
                     </Text>
                   </View>
                 </View>
 
                 <View
-                  style={{
-                    width: '100%',
-                    flexDirection: 'row',
-                    justifyContent:
-                      'space-between',
-                    alignItems: 'center',
-                  }}
+                  style={
+                    isMobile
+                      ? {
+                          width: '100%',
+                          flexDirection: 'row',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                        }
+                      : styles.rowActions
+                  }
                 >
                   <View
                     style={[
                       styles.roleBadge,
-                      user.role === 'user' &&
-                        styles.roleBadgeSecondary,
+                      user.role === 'user' && styles.roleBadgeSecondary,
                     ]}
                   >
                     <Text
                       style={[
                         styles.txtRole,
-                        user.role === 'user' &&
-                          styles.roleTxtSecondary,
+                        user.role === 'user' && styles.roleTxtSecondary,
                       ]}
                     >
                       {user.role}
@@ -240,49 +205,29 @@ export default function UsersControl() {
 
                   <TouchableOpacity
                     style={styles.btnDelete}
-                    onPress={() =>
-                      handleDelete(user.uid)
-                    }
+                    onPress={() => handleDelete(user.uid)}
                   >
-                    <MaterialIcons
-                      name="delete-outline"
-                      size={24}
-                      color="gray"
-                    />
+                    <MaterialIcons name="delete-outline" size={24} color="gray" />
                   </TouchableOpacity>
                 </View>
               </View>
             ))
           )}
 
-          {!loading &&
-            filteredUsers.length === 0 && (
-              <Text
-                style={{
-                  textAlign: 'center',
-                  color: 'gray',
-                  marginTop: 20,
-                }}
-              >
-                No usuarios encontrados.
-              </Text>
-            )}
+          {!loading && filteredUsers.length === 0 && (
+            <Text style={{ textAlign: 'center', color: 'gray', marginTop: 20 }}>
+              No usuarios encontrados.
+            </Text>
+          )}
         </View>
       </ScrollView>
 
-      <View
-        style={{
-          position: 'absolute',
-          bottom: 30,
-          right: 20,
-        }}
-      >
+      <View style={{ position: 'absolute', bottom: 30, right: 20 }}>
         <Animated.View
           style={{
             width: animatedWidth,
             height: 64,
-            backgroundColor:
-              Colors.light.colorPrimary,
+            backgroundColor: Colors.light.colorPrimary,
             borderRadius: 32,
             overflow: 'hidden',
             justifyContent: 'center',
@@ -292,33 +237,19 @@ export default function UsersControl() {
           {!expanded ? (
             <Pressable
               onPress={toggleFab}
-              style={{
-                flex: 1,
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
+              style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
             >
-              <MaterialIcons
-                name="person-add"
-                size={28}
-                color="white"
-              />
+              <MaterialIcons name="person-add" size={28} color="white" />
             </Pressable>
           ) : (
-            <Link
-              href="/admin/usersFrom"
-              asChild
-            >
+            <Link href="/admin/usersFrom" asChild>
               <Pressable
                 onPress={() => {
-                  Animated.timing(
-                    animatedWidth,
-                    {
-                      toValue: 64,
-                      duration: 300,
-                      useNativeDriver: false,
-                    }
-                  ).start();
+                  Animated.timing(animatedWidth, {
+                    toValue: 64,
+                    duration: 300,
+                    useNativeDriver: false,
+                  }).start();
 
                   setExpanded(false);
                 }}
@@ -331,19 +262,8 @@ export default function UsersControl() {
                   paddingHorizontal: 18,
                 }}
               >
-                <MaterialIcons
-                  name="person-add"
-                  size={28}
-                  color="white"
-                />
-
-                <Text
-                  style={{
-                    color: 'white',
-                    fontSize: 16,
-                    fontWeight: '800',
-                  }}
-                >
+                <MaterialIcons name="person-add" size={28} color="white" />
+                <Text style={{ color: 'white', fontSize: 16, fontWeight: '800' }}>
                   Agregar Usuario
                 </Text>
               </Pressable>

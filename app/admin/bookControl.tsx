@@ -19,11 +19,7 @@ import {
 import Header from '../../components/header';
 import styles from '../../constants/styleAdmin';
 import { Colors } from '../../constants/theme';
-import {
-  Book,
-  deleteBook,
-  subscribeToBooks,
-} from '../../service/bookService';
+import { Book, deleteBook, subscribeToBooks } from '../../service/bookService';
 
 export default function BookInventory() {
   const router = useRouter();
@@ -45,8 +41,7 @@ export default function BookInventory() {
         setLoading(false);
         setRefreshing(false);
       },
-      (error) => {
-        console.error('Error fetching books:', error);
+      () => {
         Alert.alert('Error', 'No se pudieron cargar los libros');
         setLoading(false);
         setRefreshing(false);
@@ -135,29 +130,30 @@ export default function BookInventory() {
             {book.title}
           </Text>
 
-          <Text style={styles.rowSubtitle}>
-            {book.pages} páginas
-          </Text>
+          <Text style={styles.rowSubtitle}>{book.pages} páginas</Text>
         </View>
       </View>
 
       <View
-        style={{
-          width: '100%',
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          gap: 12,
-        }}
+        style={
+          isMobile
+            ? {
+                width: '100%',
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                gap: 12,
+              }
+            : {
+                flex: 3,
+                flexDirection: 'row',
+                alignItems: 'center',
+              }
+        }
       >
         <Text
-          style={[
-            styles.txtAuthor,
-            {
-              flex: 1,
-            },
-          ]}
-          numberOfLines={2}
+          style={[styles.txtAuthor, isMobile && { flex: 1 }]}
+          numberOfLines={isMobile ? 2 : 1}
         >
           {book.author}
         </Text>
@@ -168,7 +164,6 @@ export default function BookInventory() {
             size={18}
             color={Colors.light.colorPrimary}
           />
-
           <Text style={styles.txtRating}>
             {parseFloat(book.rating).toFixed(1)}
           </Text>
@@ -180,9 +175,7 @@ export default function BookInventory() {
             onPress={() =>
               router.push({
                 pathname: '/admin/bookFrom',
-                params: {
-                  bookId: book.uid,
-                },
+                params: { bookId: book.uid },
               })
             }
           >
@@ -220,9 +213,7 @@ export default function BookInventory() {
         <Text style={[styles.headerCell, { flex: 2 }]}>LIBRO</Text>
         <Text style={styles.headerCell}>AUTOR</Text>
         <Text style={styles.headerCell}>RATING</Text>
-        <Text style={[styles.headerCell, { textAlign: 'right' }]}>
-          ACCIONES
-        </Text>
+        <Text style={[styles.headerCell, { textAlign: 'right' }]}>ACCIONES</Text>
       </View>
     </>
   );
@@ -234,7 +225,7 @@ export default function BookInventory() {
 
         <TextInput
           style={styles.searchInput}
-          placeholder="Buscar libros por título o autor..."
+          placeholder="Buscar libros..."
           placeholderTextColor="#94a3b8"
           value={searchQuery}
           onChangeText={setSearchQuery}
@@ -246,11 +237,7 @@ export default function BookInventory() {
   return (
     <View style={styles.contentContainer}>
       <Header />
-
-      <StatusBar
-        barStyle="dark-content"
-        backgroundColor="#f8f6f6"
-      />
+      <StatusBar barStyle="dark-content" backgroundColor="#f8f6f6" />
 
       <View style={[styles.content, { flex: 1, width: '100%' }]}>
         {loading ? (
@@ -265,12 +252,7 @@ export default function BookInventory() {
             keyExtractor={(item) => item.uid}
             renderItem={renderBookItem}
             ListHeaderComponent={isMobile ? renderMobileHeader : renderHeader}
-            contentContainerStyle={[
-              styles.listContent,
-              {
-                paddingBottom: 140,
-              },
-            ]}
+            contentContainerStyle={[styles.listContent, { paddingBottom: 140 }]}
             showsVerticalScrollIndicator={false}
             refreshing={refreshing}
             onRefresh={() => {
@@ -279,16 +261,9 @@ export default function BookInventory() {
             }}
             ListEmptyComponent={
               <View style={styles.emptyState}>
-                <MaterialIcons
-                  name="menu-book"
-                  size={48}
-                  color="#cbd5e1"
-                />
-
+                <MaterialIcons name="menu-book" size={48} color="#cbd5e1" />
                 <Text style={styles.txtEmpty}>
-                  {searchQuery
-                    ? 'No se encontraron libros'
-                    : 'No hay libros registrados'}
+                  {searchQuery ? 'No se encontraron libros' : 'No hay libros registrados'}
                 </Text>
               </View>
             }
@@ -296,13 +271,7 @@ export default function BookInventory() {
         )}
       </View>
 
-      <View
-        style={{
-          position: 'absolute',
-          bottom: 30,
-          right: 20,
-        }}
-      >
+      <View style={{ position: 'absolute', bottom: 30, right: 20 }}>
         <Animated.View
           style={{
             width: animatedWidth,
@@ -317,11 +286,7 @@ export default function BookInventory() {
           {!expanded ? (
             <Pressable
               onPress={toggleFab}
-              style={{
-                flex: 1,
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
+              style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
             >
               <MaterialIcons name="book" size={28} color="white" />
             </Pressable>
@@ -341,14 +306,7 @@ export default function BookInventory() {
               }}
             >
               <MaterialIcons name="book" size={28} color="white" />
-
-              <Text
-                style={{
-                  color: 'white',
-                  fontSize: 16,
-                  fontWeight: '800',
-                }}
-              >
+              <Text style={{ color: 'white', fontSize: 16, fontWeight: '800' }}>
                 Agregar Libro
               </Text>
             </Pressable>
