@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Alert } from 'react-native';
-import { useAuth } from '../../context/authContext';
-import { addToWatchlist, removeFromWatchlist } from '../../service/authService';
-import { Book, getLatestBooks, subscribeToBooks } from '../../service/bookService';
+import { useAuth } from '../context/authContext';
+import { addToWatchlist, removeFromWatchlist } from '../service/authService';
+import { Book, getLatestBooks, subscribeToBooks } from '../service/bookService';
 
 export const useBooksPublic = () => {
     const { user, userData } = useAuth();

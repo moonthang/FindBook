@@ -13,11 +13,10 @@ import {
   useWindowDimensions,
   View,
 } from 'react-native';
-
 import Header from '../../components/header';
 import styles from '../../constants/styleAdmin';
 import { Colors } from '../../constants/theme';
-import { useUsersControl } from '../controllers/userController';
+import { useUsersControl } from '../../controllers/userController';
 
 export default function UsersControl() {
   const {

@@ -1,9 +1,9 @@
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Alert } from 'react-native';
-import { useAuth } from '../../context/authContext';
-import { deleteCurrentUserAccount, getCurrentUser, getUserData, logoutUser, removeFromWatchlist, updateUserData, UserData } from '../../service/authService';
-import { Book, getBooksByIds } from '../../service/bookService';
+import { useAuth } from '../context/authContext';
+import { deleteCurrentUserAccount, getCurrentUser, getUserData, logoutUser, removeFromWatchlist, updateUserData, UserData } from '../service/authService';
+import { Book, getBooksByIds } from '../service/bookService';
 
 export const useProfile = () => {
     const router = useRouter();
@@ -138,21 +138,32 @@ export const useProfile = () => {
 };
 
 export const useWatchlist = () => {
-    const { userData, user } = useAuth();
+    const { userData, user, loading: authLoading, refreshUserData } = useAuth();
     const [booksList, setBooksList] = useState<Book[]>([]);
     const [searchQuery, setSearchQuery] = useState('');
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const fetchWatchlist = async () => {
-            if (!userData?.watchlist || !Array.isArray(userData.watchlist) || userData.watchlist.length === 0) {
-                setBooksList([]);
-                setLoading(false);
-                return;
-            }
+        if (authLoading) return;
 
+        if (!user) {
+            setBooksList([]);
+            setLoading(false);
+            return;
+        }
+
+        if (!userData) {
             setLoading(true);
+            return;
+        }
+
+        const fetchWatchlist = async () => {
             try {
+                setLoading(true);
+                if (!userData.watchlist || userData.watchlist.length === 0) {
+                    setBooksList([]);
+                    return;
+                }
                 const data = await getBooksByIds(userData.watchlist);
                 setBooksList(data);
             } catch (error) {
@@ -163,7 +174,7 @@ export const useWatchlist = () => {
         };
 
         fetchWatchlist();
-    }, [userData?.watchlist]);
+    }, [user, userData, authLoading]);
 
     const filteredBooks = booksList.filter(book =>
         book.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -175,6 +186,7 @@ export const useWatchlist = () => {
         try {
             await removeFromWatchlist(user.uid, bookUid);
             setBooksList(prev => prev.filter(b => b.uid !== bookUid));
+            await refreshUserData();
         } catch (error) {
             console.error("Error removing book:", error);
         }

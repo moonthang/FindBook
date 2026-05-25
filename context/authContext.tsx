@@ -9,6 +9,7 @@ interface AuthContextType {
     userData: UserData | null;
     loading: boolean;
     logout: () => Promise<void>;
+    refreshUserData: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType>({
@@ -16,6 +17,7 @@ const AuthContext = createContext<AuthContextType>({
     userData: null,
     loading: true,
     logout: async () => { },
+    refreshUserData: async () => { },
 });
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
@@ -49,7 +51,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setUserData(null);
     };
 
-    const value = { user, userData, loading, logout };
+    const refreshUserData = async () => {
+        if (user) {
+            const data = await getUserData(user.uid).catch(e => { console.error(e); return null; }) as UserData | null;
+            setUserData(data);
+        }
+    };
+
+    const value = { user, userData, loading, logout, refreshUserData };
 
     return (
         <AuthContext.Provider value={value}>

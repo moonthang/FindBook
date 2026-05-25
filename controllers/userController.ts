@@ -1,7 +1,7 @@
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { Alert } from 'react-native';
-import { createUserByAdmin, deleteUserData, getAllUsers, UserData } from '../../service/authService';
+import { createUserByAdmin, deleteUserData, getAllUsers, UserData } from '../service/authService';
 
 export type UserRole = 'admin' | 'user';
 

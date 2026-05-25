@@ -2,8 +2,8 @@ import { useRouter } from 'expo-router';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { useState } from 'react';
 import { Alert } from 'react-native';
-import { auth } from '../../firebaseConfig';
-import { registerUser } from '../../service/authService';
+import { auth } from '../firebaseConfig';
+import { registerUser } from '../service/authService';
 
 export const useLogin = () => {
     const router = useRouter();

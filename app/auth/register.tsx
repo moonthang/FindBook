@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 
 import { styles } from '../../constants/styleAuth';
-import { useRegister } from '../controllers/authController';
+import { useRegister } from '../../controllers/authController';
 
 export default function Register() {
   const {

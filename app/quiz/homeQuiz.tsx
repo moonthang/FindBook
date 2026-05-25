@@ -1,14 +1,10 @@
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { Link } from 'expo-router';
 import React from 'react';
-import { ScrollView, StatusBar, Text, TouchableOpacity, View } from 'react-native';
+import { Image, ScrollView, StatusBar, Text, TouchableOpacity, View } from 'react-native';
 import styles from '../../constants/styleQuiz';
 
 export default function HomeQuiz() {
-    const handleStartQuiz = () => {
-        console.log('Iniciar quiz');
-    };
-
     return (
         <ScrollView style={styles.contentContainer}>
             <StatusBar barStyle="dark-content" />
@@ -25,8 +21,12 @@ export default function HomeQuiz() {
 
             <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
                 <View style={styles.bannerContainer}>
-                    <View style={styles.imgBanner} />
-                </View>
+                    <Image
+                    source={{ uri: 'https://firebasestorage.googleapis.com/v0/b/amh26-d3e52.firebasestorage.app/o/img%2Flibros.png?alt=media&token=c8b6c7da-111f-4e0d-9014-cda1689ae2b9' }}
+                    style={styles.imgBanner}
+                    resizeMode="cover"
+                    />
+                    </View>
 
                 <View style={styles.content}>
                     <Text style={styles.titlePrin}>
@@ -84,12 +84,12 @@ export default function HomeQuiz() {
             </ScrollView>
 
             <View style={styles.btnContainer}>
-                <TouchableOpacity style={styles.btnStart} onPress={handleStartQuiz} activeOpacity={0.9} >
-                    <Link href="/quiz/quiz" >
+                <Link href="/quiz/quiz" asChild>
+                    <TouchableOpacity style={styles.btnStart} activeOpacity={0.9}>
                         <Text style={styles.btnTxt}>Iniciar Quiz</Text>
                         <MaterialCommunityIcons name="arrow-right" size={20} color="#ffffff" />
-                    </Link>
-                </TouchableOpacity>
+                    </TouchableOpacity>
+                </Link>
             </View>
         </ScrollView>
     );

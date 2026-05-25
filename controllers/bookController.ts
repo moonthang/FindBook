@@ -1,14 +1,16 @@
 import * as ImagePicker from 'expo-image-picker';
 import { useRouter } from 'expo-router';
-import { useEffect, useState } from 'react';
-import { Alert } from 'react-native';
-import { Book, createBook, deleteBook, subscribeToBooks, uploadBookCover } from '../../service/bookService';
-
+import { useEffect, useRef, useState } from 'react';
+import { Alert, Animated } from 'react-native';
+import { Book, createBook, deleteBook, subscribeToBooks, uploadBookCover } from '../service/bookService';
+ 
 export const useBookControl = () => {
     const [books, setBooks] = useState<Book[]>([]);
     const [loading, setLoading] = useState(true);
     const [searchQuery, setSearchQuery] = useState('');
     const [refreshing, setRefreshing] = useState(false);
+    const [expanded, setExpanded] = useState(false);
+    const animatedWidth = useRef(new Animated.Value(64)).current;
 
     useEffect(() => {
         const unsubscribe = subscribeToBooks(
@@ -18,22 +20,47 @@ export const useBookControl = () => {
                 setRefreshing(false);
             },
             (error) => {
-                console.error("Error fetching books:", error);
-                if (typeof window !== 'undefined') window.alert('Error: No se pudieron cargar los libros');
+                Alert.alert('Error', 'No se pudieron cargar los libros');
                 setLoading(false);
             }
         );
         return () => unsubscribe();
     }, []);
 
+    const toggleFab = () => {
+        Animated.timing(animatedWidth, {
+            toValue: expanded ? 64 : 250,
+            duration: 300,
+            useNativeDriver: false,
+        }).start();
+        setExpanded(!expanded);
+    };
+
+    const closeFab = () => {
+        Animated.timing(animatedWidth, {
+            toValue: 64,
+            duration: 300,
+            useNativeDriver: false,
+        }).start();
+        setExpanded(false);
+    };
+
     const handleDelete = async (book: Book) => {
-        if (typeof window !== 'undefined' && window.confirm(`¿Estás seguro de que deseas eliminar "${book.title}"?`)) {
-            try {
-                await deleteBook(book.uid);
-            } catch (error) {
-                if (typeof window !== 'undefined') window.alert('Error: No se pudo eliminar el libro');
-            }
-        }
+        Alert.alert(
+            'Eliminar Libro',
+            `¿Estás seguro de que deseas eliminar "${book.title}"?`,
+            [
+                { text: 'Cancelar', style: 'cancel' },
+                { 
+                    text: 'Eliminar', 
+                    style: 'destructive', 
+                    onPress: async () => {
+                        try { await deleteBook(book.uid); } 
+                        catch (e) { Alert.alert('Error', 'No se pudo eliminar'); }
+                    } 
+                }
+            ]
+        );
     };
 
     const filteredBooks = books.filter(book =>
@@ -41,7 +68,7 @@ export const useBookControl = () => {
         book.author.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
-    return { loading, searchQuery, setSearchQuery, refreshing, setRefreshing, handleDelete, filteredBooks };
+    return { loading, searchQuery, setSearchQuery, refreshing, setRefreshing, handleDelete, filteredBooks, expanded, animatedWidth, toggleFab, closeFab };
 };
 
 export interface BookFormState {
@@ -87,6 +114,10 @@ export const useBookForm = () => {
         setForm(prev => ({ ...prev, tags: prev.tags.filter(tag => tag !== tagToRemove) }));
     };
 
+    const handleRemoveImage = () => {
+        setImage(null);
+    };
+
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -119,5 +150,5 @@ export const useBookForm = () => {
 
     const updateField = (field: keyof BookFormState, value: any) => setForm(prev => ({ ...prev, [field]: value }));
 
-    return { form, image, uploading, currentTag, setCurrentTag, loading, handleAddTag, handleRemoveTag, setImage, pickImage, handleSave, resetForm, updateField };
+    return { form, image, uploading, currentTag, setCurrentTag, loading, handleAddTag, handleRemoveTag, handleRemoveImage, pickImage, handleSave, resetForm, updateField };
 };

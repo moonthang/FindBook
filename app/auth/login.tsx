@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 
 import { styles } from '../../constants/styleAuth';
-import { useLogin } from '../controllers/authController';
+import { useLogin } from '../../controllers/authController';
 
 export default function Login() {
   const {

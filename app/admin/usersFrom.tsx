@@ -3,7 +3,7 @@ import { AntDesign, Entypo, FontAwesome, FontAwesome5, FontAwesome6, Ionicons, M
 import React from 'react';
 import { ActivityIndicator, ScrollView, StatusBar, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import styles from '../../constants/styleAdmin';
-import { useUserForm } from '../controllers/userController';
+import { useUserForm } from '../../controllers/userController';
 
 export default function Createusers() {
     const {
@@ -17,9 +17,8 @@ export default function Createusers() {
             <Header />
             <StatusBar barStyle="dark-content" backgroundColor="#f8f6f6" />
             <ScrollView
-  style={styles.contentContainer}
-  contentContainerStyle={styles.container}
->
+            style={styles.contentContainer}
+            contentContainerStyle={styles.container}>
                 <View style={styles.titleContainer}>
                     <FontAwesome6 name="user-group" size={24} color="#F37032" />
                     <View style={styles.titleSection}>

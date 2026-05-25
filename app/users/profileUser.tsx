@@ -2,20 +2,9 @@ import Header from '@/components/header';
 import { Feather } from '@expo/vector-icons';
 import { Link } from 'expo-router';
 import React from 'react';
-
-import {
-  ActivityIndicator,
-  Image,
-  KeyboardTypeOptions,
-  ScrollView,
-  StatusBar,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { ActivityIndicator, Image, KeyboardTypeOptions, ScrollView, StatusBar, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import styles from '../../constants/styleUsers';
-import { useProfile } from '../controllers/userProfileController';
+import { useProfile } from '../../controllers/userProfileController';
 
 interface ProfileFieldProps {
   label: string;
@@ -27,28 +16,14 @@ interface ProfileFieldProps {
   maxLength?: number;
 }
 
-const ProfileField = ({
-  label,
-  value,
-  isEditing,
-  onChangeText,
-  editable = false,
-  keyboardType,
-  maxLength,
-}: ProfileFieldProps) => (
+const ProfileField = ({label, value, isEditing, onChangeText, editable = false, keyboardType, maxLength}:
+  ProfileFieldProps) => (
   <View style={styles.form}>
     <Text style={styles.label}>{label}</Text>
 
     <View style={styles.input}>
       {isEditing && editable ? (
-        <TextInput
-          value={value}
-          onChangeText={onChangeText}
-          style={styles.placeholder}
-          autoCapitalize="words"
-          keyboardType={keyboardType}
-          maxLength={maxLength}
-        />
+        <TextInput value={value} onChangeText={onChangeText} style={styles.placeholder} autoCapitalize="words" keyboardType={keyboardType} maxLength={maxLength} />
       ) : (
         <Text style={styles.placeholder}>
           {value || 'No registrada'}
@@ -59,11 +34,11 @@ const ProfileField = ({
 );
 
 export default function UserProfile() {
-    const {
-        user, loading, isEditing, setIsEditing, editedName, setEditedName,
-        editedBirthDate, handleDateChange, handleUpdate, handleLogout,
-        handleDeleteAccount, getInitials, formatDate, cancelEditing
-    } = useProfile();
+  const {
+    user, loading, isEditing, setIsEditing, editedName, setEditedName,
+    editedBirthDate, handleDateChange, handleUpdate, handleLogout,
+    handleDeleteAccount, getInitials, formatDate, cancelEditing
+  } = useProfile();
 
   if (loading && !user) {
     return (
@@ -87,40 +62,17 @@ export default function UserProfile() {
   return (
     <View style={styles.contentContainer}>
       <Header />
-
-      <StatusBar
-        barStyle="dark-content"
-        backgroundColor="#f8f6f6"
-      />
-
-      <ScrollView
-        style={{ flex: 1, width: '100%' }}
-        contentContainerStyle={styles.container}
-        showsVerticalScrollIndicator={false}
-      >
+      <StatusBar barStyle="dark-content" backgroundColor="#f8f6f6" />
+      <ScrollView style={{ flex: 1, width: '100%' }} contentContainerStyle={styles.container} showsVerticalScrollIndicator={false} >
         <View style={styles.content}>
           <View style={styles.profileContent}>
             <View style={styles.avatarContainer}>
-              <View
-                style={[
-                  styles.avatarContent,
-                  {
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  },
-                ]}
-              >
-                <Text
-                  style={{
-                    fontSize: 48,
-                    fontWeight: '900',
-                    color: '#F37032',
-                  }}
-                >
+              <View style={[styles.avatarContent, { justifyContent: 'center', alignItems: 'center', },]}>
+                <Text style={{ fontSize: 48, fontWeight: '900', color: '#F37032', }}>
                   {user
                     ? getInitials(
-                        user.displayName
-                      )
+                      user.displayName
+                    )
                     : 'NN'}
                 </Text>
               </View>
@@ -138,114 +90,77 @@ export default function UserProfile() {
             </View>
           </View>
 
-                <View style={styles.dataSection}>
-                    <ProfileField label="Nombre Completo" value={isEditing ? editedName : (user?.displayName || '')}isEditing={isEditing} onChangeText={setEditedName} editable={true} />
-                    <ProfileField label="Fecha de Nacimiento" value={isEditing ? editedBirthDate : (user?.birthDate || '')} isEditing={isEditing} onChangeText={handleDateChange} editable={true} keyboardType="number-pad" maxLength={10}/>
-                    <ProfileField label="Correo Electrónico"value={user?.email || ''} isEditing={isEditing} editable={false} />
-                    <View style={styles.btnContainer}>
-                        {isEditing ? (
-                            <TouchableOpacity style={styles.btnEdit} activeOpacity={0.8} onPress={handleUpdate}>
-                                {loading ? <ActivityIndicator color="#fff" /> : <Text style={styles.btnEditTxt}>Guardar Cambios</Text>}
-                            </TouchableOpacity>
-                        ) : (
-                            <>
-                                <TouchableOpacity style={styles.btnEdit} activeOpacity={0.8} onPress={() => setIsEditing(true)}>
-                                    <Text style={styles.btnEditTxt}>Editar Perfil</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity style={[styles.btnEdit, { backgroundColor: 'gray' }]} activeOpacity={0.8} onPress={handleLogout}>
-                                    <Text style={styles.btnEditTxt}>Cerrar Sesión</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity style={styles.btnDelete} activeOpacity={0.7} onPress={handleDeleteAccount}>
-                                    <Text style={[styles.btnDeleteTxt, { color: '#ef4444' }]}>Eliminar Cuenta</Text>
-                                </TouchableOpacity>
-                            </>
-                        )}
+          <View style={styles.dataSection}>
+            <ProfileField label="Nombre Completo" value={isEditing ? editedName : (user?.displayName || '')} isEditing={isEditing} onChangeText={setEditedName} editable={true} />
+            <ProfileField label="Fecha de Nacimiento" value={isEditing ? editedBirthDate : (user?.birthDate || '')} isEditing={isEditing} onChangeText={handleDateChange} editable={true} keyboardType="number-pad" maxLength={10} />
+            <ProfileField label="Correo Electrónico" value={user?.email || ''} isEditing={isEditing} editable={false} />
+            <View style={styles.btnContainer}>
+              {isEditing ? (
+                <TouchableOpacity style={styles.btnEdit} activeOpacity={0.8} onPress={handleUpdate}>
+                  {loading ? <ActivityIndicator color="#fff" /> : <Text style={styles.btnEditTxt}>Guardar Cambios</Text>}
+                </TouchableOpacity>
+              ) : (
+                <>
+                  <TouchableOpacity style={styles.btnEdit} activeOpacity={0.8} onPress={() => setIsEditing(true)}>
+                    <Text style={styles.btnEditTxt}>Editar Perfil</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity style={[styles.btnEdit, { backgroundColor: 'gray' }]} activeOpacity={0.8} onPress={handleLogout}>
+                    <Text style={styles.btnEditTxt}>Cerrar Sesión</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity style={styles.btnDelete} activeOpacity={0.7} onPress={handleDeleteAccount}>
+                    <Text style={[styles.btnDeleteTxt, { color: '#ef4444' }]}>Eliminar Cuenta</Text>
+                  </TouchableOpacity>
+                </>
+              )}
 
-                        {isEditing && (
-                            <TouchableOpacity style={styles.btnDelete} activeOpacity={0.7} onPress={cancelEditing}>
-                                <Text style={styles.btnDeleteTxt}>Cancelar</Text>
-                            </TouchableOpacity>
-                        )}
-                    </View>
-                </View>
+              {isEditing && (
+                <TouchableOpacity style={styles.btnDelete} activeOpacity={0.7} onPress={cancelEditing}>
+                  <Text style={styles.btnDeleteTxt}>Cancelar</Text>
+                </TouchableOpacity>
+              )}
+            </View>
+          </View>
 
-          <Link
-            href="/users/watchlistUser"
-            asChild
-          >
-            <TouchableOpacity
-              style={styles.bookSavedCard}
-              activeOpacity={0.9}
-            >
+          <Link href="/users/watchlistUser" asChild>
+            <TouchableOpacity style={styles.bookSavedCard} activeOpacity={0.9}>
               <View style={styles.circleTop} />
-
               <View style={styles.circleBottom} />
-
-              <View
-                style={styles.bookSavedContent}
-              >
-                <View
-                  style={styles.booksTxtSection}
-                >
-                  <View
-                    style={styles.booksHeader}
-                  >
-                    <Text
-                      style={styles.booksLabel}
-                    >
+              <View style={styles.bookSavedContent}>
+                <View style={styles.booksTxtSection}>
+                  <View style={styles.booksHeader}>
+                    <Text style={styles.booksLabel}>
                       Tu Colección
                     </Text>
                   </View>
 
-                  <Text
-                    style={styles.booksTitle}
-                  >
+                  <Text style={styles.booksTitle}>
                     Libros Guardados
                   </Text>
 
-                  <Text
-                    style={styles.booksSubtitle}
-                  >
+                  <Text style={styles.booksSubtitle}>
                     Encuentra los libros
                     esperando tu atención
                   </Text>
                 </View>
 
                 <View style={styles.bookStack}>
-                  <View
-                    style={[
-                      styles.bookItem,
-                      styles.bookItem1,
-                    ]}
-                  >
-                    <Image
-                      source={{
-                        uri: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDVxHnvwWRddnjnjrg0toH5mD-matt8VriIipHPO_chW8oTDoDBxir1dtFfwrCPXpbYjfrB8vgUnA2pMdL_B-18W6yfhRduGmel8s-9n-qQl_mY2G6tNwnNU-4MXFIap57tGJgLqNMw9iLpakLEjoGe3eimKH7o-pbENrQQm4t_fDi5AYjBZZQW8O1euDTmHNrf6EaUOKQVd9F6P_zmmyZaXUXhjbRXBRAHgI1p9fnaerGwFGgM0OcqG8Nr5BP5WphDWvhCPAcp1Q',
-                      }}
+                  <View style={[styles.bookItem, styles.bookItem1]}>
+                    <Image source={{
+                      uri: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDVxHnvwWRddnjnjrg0toH5mD-matt8VriIipHPO_chW8oTDoDBxir1dtFfwrCPXpbYjfrB8vgUnA2pMdL_B-18W6yfhRduGmel8s-9n-qQl_mY2G6tNwnNU-4MXFIap57tGJgLqNMw9iLpakLEjoGe3eimKH7o-pbENrQQm4t_fDi5AYjBZZQW8O1euDTmHNrf6EaUOKQVd9F6P_zmmyZaXUXhjbRXBRAHgI1p9fnaerGwFGgM0OcqG8Nr5BP5WphDWvhCPAcp1Q',
+                    }}
                       style={styles.bookCover}
                     />
                   </View>
 
-                  <View
-                    style={[
-                      styles.bookItem,
-                      styles.bookItem2,
-                    ]}
-                  >
-                    <Image
-                      source={{
-                        uri: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBpHS-8eVSjuXbCsJgPtS42d0OtWvVuOUadBX1av3qcscNnItqzPVvR3SiInAeStk3yMveZ4qgqVAV0nIZh0Eqe8o9FtOqG3azTMBfW5aiYbD9Gkf-YQ8LKbZ2WPYDbNQHXsxvPYeAyszlNXiFKIi8DDq2bFVljUfgMSjrwtOeuzDSrnHx9bra6cm6vAEqlRP-dzD6nqzAKZy2OtN1fB5wUowLzD7-W-WrLDuWzKh3lsVHK73tufG66uNZwFCgSiva3s76zUljy3g',
-                      }}
+                  <View style={[styles.bookItem, styles.bookItem2,]}>
+                    <Image source={{
+                      uri: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBpHS-8eVSjuXbCsJgPtS42d0OtWvVuOUadBX1av3qcscNnItqzPVvR3SiInAeStk3yMveZ4qgqVAV0nIZh0Eqe8o9FtOqG3azTMBfW5aiYbD9Gkf-YQ8LKbZ2WPYDbNQHXsxvPYeAyszlNXiFKIi8DDq2bFVljUfgMSjrwtOeuzDSrnHx9bra6cm6vAEqlRP-dzD6nqzAKZy2OtN1fB5wUowLzD7-W-WrLDuWzKh3lsVHK73tufG66uNZwFCgSiva3s76zUljy3g',
+                    }}
                       style={styles.bookCover}
                     />
                   </View>
 
-                  <View
-                    style={[
-                      styles.bookItem,
-                      styles.bookItem3,
-                    ]}
-                  >
+                  <View style={[styles.bookItem, styles.bookItem3,]}>
                     <Feather
                       name="plus-circle"
                       size={24}

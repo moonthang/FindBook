@@ -5,7 +5,7 @@ import { ActivityIndicator, Image, ScrollView, StatusBar, Text, TextInput, Touch
 import styleAdmin from '../constants/styleAdmin';
 import styleSwipe from '../constants/styleSwipe';
 import { Colors } from '../constants/theme';
-import { useBooksPublic } from './controllers/bookDisplayController';
+import { useBooksPublic } from '../controllers/bookDisplayController';
 
 export default function BooksPublic() {
     const { width } = useWindowDimensions();

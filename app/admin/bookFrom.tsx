@@ -3,133 +3,23 @@ import { AntDesign, Entypo, MaterialCommunityIcons, MaterialIcons } from '@expo/
 import React from 'react';
 import { ActivityIndicator, Image, ScrollView, StatusBar, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import styles from '../../constants/styleAdmin';
-import { createBook, uploadBookCover } from '../../service/bookService';
-
-interface BookForm {
-  title: string;
-  author: string;
-  description: string;
-  rating: string;
-  pages: string;
-  tags: string[];
-  coverUrl: string;
-  uid?: string;
-}
-
-export default function Createbook() {
-    const router = useRouter();
-    const [form, setForm] = useState<BookForm>({
-        title: '',
-        author: '',
-        description: '',
-        rating: '',
-        pages: '',
-        tags: [],
-        coverUrl: '',
-    });
-    const [image, setImage] = useState<string | null>(null);
-    const [uploading, setUploading] = useState(false);
-
-    const [currentTag, setCurrentTag] = useState('');
-    const [loading, setLoading] = useState(false);
-
-    const validateForm = (): boolean => {
-        if (!form.title.trim()) {
-            Alert.alert('Error', 'El título del libro es requerido');
-            return false;
-        }
-        if (!form.author.trim()) {
-            Alert.alert('Error', 'El nombre del autor es requerido');
-            return false;
-        }
-        const ratingNum = parseFloat(form.rating);
-        if (!form.rating || isNaN(ratingNum) || ratingNum < 0 || ratingNum > 5) {
-            Alert.alert('Error', 'El rating debe estar entre 0 y 5');
-            return false;
-        }
-        return true;
-    };
-
-    const handleAddTag = () => {
-        if (currentTag.trim() && !form.tags.includes(currentTag.trim())) {
-            setForm(prev => ({ ...prev, tags: [...prev.tags, currentTag.trim()] }));
-            setCurrentTag('');
-        }
-    };
-
-    const handleRemoveTag = (tagToRemove: string) => {
-        setForm(prev => ({ ...prev, tags: prev.tags.filter(tag => tag !== tagToRemove) }));
-    };
-
-    const handleRemoveImage = () => {
-        setImage(null);
-    };
-
-    const pickImage = async () => {
-        let result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,
-            allowsEditing: true,
-            aspect: [2, 3],
-            quality: 1,
-        });
-
-        if (!result.canceled) {
-            setImage(result.assets[0].uri);
-        }
-    };
-
-    const handleSave = async (isDraft: boolean = false) => {
-        if (!isDraft && !validateForm()) return;
-
-        setLoading(true);
-        setUploading(true);
-        try {
-            let coverUrl = form.coverUrl;
-            if (image) {
-                coverUrl = await uploadBookCover(image);
-            }
-
-            const bookData = {
-                ...form,
-                uid: Date.now().toString(),
-                coverUrl: coverUrl,
-            };
-
-            await createBook(bookData);
-
-            Alert.alert(
-                'Éxito',
-                'Libro agregado al inventario',
-                [{ text: 'OK', onPress: () => {
-                    resetForm();
-                    router.push('/admin/bookControl');
-                }}]
-            );
-        } catch (error) {
-            console.error('Error saving book:', error);
-            Alert.alert('Error', 'No se pudo guardar el libro');
-        } finally {
-            setLoading(false);
-            setUploading(false);
-        }
-    };
-
-    const resetForm = () => {
-        setForm({
-            title: '',
-            author: '',
-            description: '',
-            rating: '',
-            pages: '',
-            tags: [],
-            coverUrl: '',
-        });
-        setImage(null);
-    };
-
-    const updateField = (field: keyof BookForm, value: any) => {
-        setForm(prev => ({ ...prev, [field]: value }));
-    };
+import { useBookForm } from '../../controllers/bookController';
+ 
+export default function CreateBook() {
+    const {
+      form,
+      image,
+      uploading,
+      loading,
+      currentTag,
+      setCurrentTag,
+      handleAddTag,
+      handleRemoveTag,
+      handleRemoveImage,
+      pickImage,
+      handleSave,
+      updateField
+    } = useBookForm();
 
   return (
     <View style={styles.contentContainer}>
@@ -307,7 +197,7 @@ export default function Createbook() {
           <TouchableOpacity
             style={[styles.btnPrimary, loading && styles.btnDisabled]}
             activeOpacity={0.9}
-            onPress={handleSave}
+            onPress={() => handleSave()}
             disabled={loading}
           >
             {loading ? (

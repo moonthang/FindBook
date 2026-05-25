@@ -6,7 +6,7 @@ import Carousel from 'react-native-reanimated-carousel';
 import Header from '../components/header';
 import styles from '../constants/stylehome';
 import { Colors } from '../constants/theme';
-import { useHomeBooks } from './controllers/bookDisplayController';
+import { useHomeBooks } from '../controllers/bookDisplayController';
 
 export default function Home() {
   const { width } = useWindowDimensions();

@@ -19,7 +19,7 @@ import styleSwipe from '../../constants/styleSwipe';
 import styles from '../../constants/styleUsers';
 import stylesWL from '../../constants/styleWatchList';
 import { Colors } from '../../constants/theme';
-import { useWatchlist } from '../controllers/userProfileController';
+import { useWatchlist } from '../../controllers/userProfileController';
 
 export default function WatchlistUser() {
   const { width } = useWindowDimensions();
@@ -34,12 +34,7 @@ export default function WatchlistUser() {
   return (
     <View style={styles.contentContainer}>
       <Header />
-
-      <StatusBar
-        barStyle="dark-content"
-        backgroundColor="#f8f6f6"
-      />
-
+      <StatusBar barStyle="dark-content" backgroundColor="#f8f6f6"/>
       <ScrollView
         style={{ flex: 1, width: '100%' }}
         contentContainerStyle={styles.container}
